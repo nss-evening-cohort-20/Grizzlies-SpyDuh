@@ -5,6 +5,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>Grizzlies_SpyDuh</RootNamespace>
+    <UserSecretsId>04875b20-ae5e-4b6b-9bec-25f40a11bcae</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -14,6 +15,7 @@
   <ItemGroup>
     <Folder Include="Controllers\" />
     <Folder Include="Database\" />
+    <Folder Include="Models\" />
   </ItemGroup>
 
 </Project>
