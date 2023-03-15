@@ -127,6 +127,54 @@ GO
 ALTER TABLE [UserAssignment] ADD FOREIGN KEY ([UserId]) REFERENCES [User] ([Id])
 GO
 
+
+--Starter Data for Agency Table
+
+INSERT INTO [dbo].[Agency]
+           ([Handler]
+           ,[Name])
+     VALUES(0,'Michael Westen'),
+           (1,'John Drake'),
+           (0,'Edgar Brodie'),
+           (0,'Richard Hannay'),
+           (1,'Alicia Huberman')    
+GO
+
+
+--Starter Data for User Table
+INSERT INTO [dbo].[User]
+           ([Name]
+           ,[Email]
+           ,[AgencyId])
+     VALUES
+           ('Harry Palmer', 'hpalmer@Spyduh.org',2),
+           ('Tom Bishop', 'tpishop@Spyduh.org',1),
+           ('Roger Thornhill', 'rhornhill@Spyduh.org',5),
+           ('Annie Walker', 'aWalker@Spyduh.org',3),
+           ('Black Widow', 'bwidow@Spyduh.org',5),
+           ('William Brandt', 'wbrandt@Spyduh.org',2),
+           ('Felix Leiter', 'fleiterr@Spyduh.org',4),
+           ('Nathan Muir', 'nmuir@Spyduh.org',1),
+           ('Evelyn Salt', null,3),
+           ('Carrie Mathison', null,1),
+           ('Jack Ryan', 'jryan@Spyduh.org',4),
+           ('Nick Fury', 'nfury@Spyduh.org',2),
+           ('Sarah Walker', 'swalker@Spyduh.org',5),
+           ('Austin Powers', 'apowers@Spyduh.org',3),
+           ('Emma Peel', null,4),
+           ('Napoleon Solo', 'nsolo.org',3),
+           ('Harry Hart', 'hart@Spyduh.org',2),
+           ('Maxwell Smart', null,4),
+           ('Sydney Bristow', 'sbristow@Spyduh.org',5),
+           ('George Smiley', 'gsmiley@Spyduh.org',3),
+           ('Ethan Hunt', null,4),
+           ('Illya Kuryakin', null,4)
+GO
+
+
+
+
+
 --Starter Data for SpyTeam Table
 
 INSERT INTO [SpyTeam] (UserId1, UserId2) VALUES (1,3), (1,5), (3,7), (9, 5), (15, 13), (15, 17), (11, 9), (17, 19), (17, 1), (3, 9)
