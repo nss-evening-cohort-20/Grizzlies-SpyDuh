@@ -126,3 +126,15 @@ GO
 
 ALTER TABLE [UserAssignment] ADD FOREIGN KEY ([UserId]) REFERENCES [User] ([Id])
 GO
+
+--Starter Data for SpyTeam Table
+
+INSERT INTO [SpyTeam] (UserId1, UserId2) VALUES (1,2)
+INSERT INTO [SpyTeam] (UserId1, UserId2) VALUES (1,4)
+INSERT INTO [SpyTeam] (UserId1, UserId2) VALUES (2,3)
+
+
+--Starter Data for SpyEnemy Table
+INSERT INTO [SpyEnemy] (UserId1, UserId2) VALUES (1,3)
+INSERT INTO [SpyEnemy] (UserId1, UserId2) VALUES (2,4)
+INSERT INTO [SpyTeam] (UserId1, UserId2) VALUES (3,4)
