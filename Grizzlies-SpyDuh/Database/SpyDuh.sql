@@ -129,12 +129,9 @@ GO
 
 --Starter Data for SpyTeam Table
 
-INSERT INTO [SpyTeam] (UserId1, UserId2) VALUES (1,2)
-INSERT INTO [SpyTeam] (UserId1, UserId2) VALUES (1,4)
-INSERT INTO [SpyTeam] (UserId1, UserId2) VALUES (2,3)
+INSERT INTO [SpyTeam] (UserId1, UserId2) VALUES (1,3), (1,5), (3,7), (9, 5), (15, 13), (15, 17), (11, 9), (17, 19), (17, 1), (3, 9)
+
 
 
 --Starter Data for SpyEnemy Table
-INSERT INTO [SpyEnemy] (UserId1, UserId2) VALUES (1,3)
-INSERT INTO [SpyEnemy] (UserId1, UserId2) VALUES (2,4)
-INSERT INTO [SpyTeam] (UserId1, UserId2) VALUES (3,4)
+INSERT INTO [SpyEnemy] (UserId1, UserId2) VALUES (2,4), (2,6), (4,8), (10,6), (16, 14), (16,18), (12,10), (18,20), (18,2), (4,10)   
