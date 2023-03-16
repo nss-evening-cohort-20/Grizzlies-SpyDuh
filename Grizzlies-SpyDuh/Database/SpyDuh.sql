@@ -186,6 +186,27 @@ INSERT INTO [SpyEnemy] (UserId1, UserId2) VALUES (2,4), (2,6), (4,8), (10,6), (1
 
 
 
+
+--Starter Data for Skills Table
+
+insert into [dbo].[Skill]
+        ([Name])
+
+values ('Critical Thinking')
+		,('Codebreaking Puzzles')
+		,('Communication Skills')
+		,('Logical Thinking')
+		,('Observation')
+		,('Deception Skills')
+		,('Physical Fitness')
+        ,('Computer Skills')
+        ,('Martial Arts')
+        ,('Boxing')
+        ,('Professional Shooter')
+        ,('Hacker')
+
+
+
 --Starter Data for Service Table
 INSERT INTO [Service]
            (Service.Name)
