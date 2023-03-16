@@ -7,61 +7,62 @@ using System.Collections.Generic;
 
 namespace Grizzlies_SpyDuh.Repositories
 {
-    public class UserRepository : BaseRepository//, IUserRepository
+    public class UserRepository : BaseRepository, IUserRepository
     {
         public UserRepository(IConfiguration configuration) : base(configuration)
         {
         }
         /*-------------------GetBySkill()----------------------*/
-        //public User GetBySkill(string skillName)
-        //{
-        //    using (var conn = Connection)
-        //    {
-        //        conn.Open();
-        //        using (var cmd = conn.CreateCommand())
-        //        {
-        //            cmd.CommandText = @" SELECT
-        //[User].Id,
-        //[User].Name, 
-        //[User].Email, 
-        //[User].AgencyId, 
-        //UserSkill.Id, 
-        //UserSkill.UserId,
-        //UserSkill.SkillLevel,
-        //Skill.Id,
-        //Skill.Name
-        //FROM [User] 
-        //INNER JOIN UserSkill ON UserSkill.UserId = [User].Id
-        //INNER JOIN Skill ON Skill.Id = UserSkill.SkillId
-        //WHERE Skill.Name= @skillName";
+        public User GetBySkill(string skillName)
+        {
+            //    using (var conn = Connection)
+            //    {
+            //        conn.Open();
+            //        using (var cmd = conn.CreateCommand())
+            //        {
+            //            cmd.CommandText = @" SELECT
+            //[User].Id,
+            //[User].Name, 
+            //[User].Email, 
+            //[User].AgencyId, 
+            //UserSkill.Id, 
+            //UserSkill.UserId,
+            //UserSkill.SkillLevel,
+            //Skill.Id,
+            //Skill.Name
+            //FROM [User] 
+            //INNER JOIN UserSkill ON UserSkill.UserId = [User].Id
+            //INNER JOIN Skill ON Skill.Id = UserSkill.SkillId
+            //WHERE Skill.Name= @skillName";
 
-        //            DbUtils.AddParameter(cmd, "@SkillName", skill);
+            //            DbUtils.AddParameter(cmd, "@SkillName", skill);
 
-        //            var reader = cmd.ExecuteReader();
+            //            var reader = cmd.ExecuteReader();
 
-        //            var users = new List<User>();
-        //            if (reader.Read())
-        //            {
-        //                var user = new User()
-        //                {
-        //                    Id = DbUtils.GetInt(reader, "Id"),
-        //                    Name = DbUtils.GetString(reader, "Name"),
-        //                    Email = DbUtils.GetString(reader, "Email"),
-        //                    AgencyId = DbUtils.GetInt(reader, "AgencyId"),
-        //                    skillName = new List<Skill>()
-        //                    {
-        //                        Id = DbUtils.GetInt(reader, "Id"),
-        //                        Name = DbUtils.GetString(reader, "Name"),
-        //                    }
-        //                };
-        //            }
+            //            var users = new List<User>();
+            //            if (reader.Read())
+            //            {
+            //                var user = new User()
+            //                {
+            //                    Id = DbUtils.GetInt(reader, "Id"),
+            //                    Name = DbUtils.GetString(reader, "Name"),
+            //                    Email = DbUtils.GetString(reader, "Email"),
+            //                    AgencyId = DbUtils.GetInt(reader, "AgencyId"),
+            //                    skillName = new List<Skill>()
+            //                    {
+            //                        Id = DbUtils.GetInt(reader, "Id"),
+            //                        Name = DbUtils.GetString(reader, "Name"),
+            //                    }
+            //                };
+            //            }
 
-        //            reader.Close();
+            //            reader.Close();
 
-        //            return users;
-        //        }
-        //    }
-        //}
+            //            return users;
+            //        }
+            //    }
+            return new User();
+        }
 
     }
 }
