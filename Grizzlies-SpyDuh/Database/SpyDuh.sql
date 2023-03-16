@@ -183,3 +183,24 @@ INSERT INTO [SpyTeam] (UserId1, UserId2) VALUES (1,3), (1,5), (3,7), (9, 5), (15
 
 --Starter Data for SpyEnemy Table
 INSERT INTO [SpyEnemy] (UserId1, UserId2) VALUES (2,4), (2,6), (4,8), (10,6), (16, 14), (16,18), (12,10), (18,20), (18,2), (4,10)   
+
+
+
+
+--Starter Data for Skills Table
+
+insert into [dbo].[Skill]
+        ([Name])
+
+values ('Critical Thinking')
+		,('Codebreaking Puzzles')
+		,('Communication Skills')
+		,('Logical Thinking')
+		,('Observation')
+		,('Deception Skills')
+		,('Physical Fitness')
+        ,('Computer Skills')
+        ,('Martial Arts')
+        ,('Boxing')
+        ,('Professional Shooter')
+        ,('Hacker')
