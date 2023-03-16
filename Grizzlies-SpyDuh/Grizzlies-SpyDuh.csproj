@@ -5,6 +5,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>Grizzlies_SpyDuh</RootNamespace>
+    <UserSecretsId>b86bd5b5-3039-4212-8327-d27ceb003914</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
