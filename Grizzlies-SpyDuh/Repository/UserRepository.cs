@@ -9,59 +9,61 @@ namespace Grizzlies_SpyDuh.Repositories
 {
     public class UserRepository : BaseRepository, IUserRepository
     {
+        private User user;
+
         public UserRepository(IConfiguration configuration) : base(configuration)
         {
         }
         /*-------------------GetBySkill()----------------------*/
-        public User GetBySkill(string skillName)
+        public User GetUserBySkill(string skillName)
         {
-            //    using (var conn = Connection)
-            //    {
-            //        conn.Open();
-            //        using (var cmd = conn.CreateCommand())
-            //        {
-            //            cmd.CommandText = @" SELECT
-            //[User].Id,
-            //[User].Name, 
-            //[User].Email, 
-            //[User].AgencyId, 
-            //UserSkill.Id, 
-            //UserSkill.UserId,
-            //UserSkill.SkillLevel,
-            //Skill.Id,
-            //Skill.Name
-            //FROM [User] 
-            //INNER JOIN UserSkill ON UserSkill.UserId = [User].Id
-            //INNER JOIN Skill ON Skill.Id = UserSkill.SkillId
-            //WHERE Skill.Name= @skillName";
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @" SELECT
+        [User].Id AS UserId,
+        [User].Name, 
+        [User].Email, 
+        [User].AgencyId, 
+        UserSkill.Id, 
+        UserSkill.UserId,
+        UserSkill.SkillLevel,
+        Skill.Id,
+        Skill.Name
+        FROM [User] 
+        INNER JOIN UserSkill ON UserSkill.UserId = [User].Id
+        INNER JOIN Skill ON Skill.Id = UserSkill.SkillId
+        WHERE Skill.Name= @skillName";
 
-            //            DbUtils.AddParameter(cmd, "@SkillName", skill);
+                    DbUtils.AddParameter(cmd, "@Name", skillName);
 
-            //            var reader = cmd.ExecuteReader();
+                    var reader = cmd.ExecuteReader();
 
-            //            var users = new List<User>();
-            //            if (reader.Read())
-            //            {
-            //                var user = new User()
-            //                {
-            //                    Id = DbUtils.GetInt(reader, "Id"),
-            //                    Name = DbUtils.GetString(reader, "Name"),
-            //                    Email = DbUtils.GetString(reader, "Email"),
-            //                    AgencyId = DbUtils.GetInt(reader, "AgencyId"),
-            //                    skillName = new List<Skill>()
-            //                    {
-            //                        Id = DbUtils.GetInt(reader, "Id"),
-            //                        Name = DbUtils.GetString(reader, "Name"),
-            //                    }
-            //                };
-            //            }
+                    User users = null;
+                    while (reader.Read())
+                    {
+                        user = new User()
+                        {
+                            Id = DbUtils.GetInt(reader, "Id"),
+                            Name = DbUtils.GetString(reader, "Name"),
+                            Email = DbUtils.GetString(reader, "Email"),
+                            AgencyId = DbUtils.GetInt(reader, "AgencyId"),
+                            Skill = new Skill()
+                            {
+                                Id = DbUtils.GetInt(reader, "Id"),
+                                Name = DbUtils.GetString(reader, "Name"),
+                            }
+                        };
 
-            //            reader.Close();
+                    }
 
-            //            return users;
-            //        }
-            //    }
-            return new User();
+                    reader.Close();
+
+                    return user;
+                }
+            }
         }
 
     }
