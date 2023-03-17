@@ -15,7 +15,7 @@ namespace Grizzlies_SpyDuh.Repositories
         {
         }
         /*-------------------GetBySkill()----------------------*/
-        public User GetBySkill(string skillName)
+        public User GetUserBySkill(string skillName)
         {
             using (var conn = Connection)
             {
