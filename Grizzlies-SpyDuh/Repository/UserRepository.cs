@@ -12,9 +12,9 @@ namespace Grizzlies_SpyDuh.Repositories
     {
         private User user;
 
-        public UserRepository(IConfiguration configuration) : base(configuration)
-        {
-        }
+        public UserRepository(IConfiguration configuration) : base(configuration) { }
+
+
         /*-------------------GetBySkill()---1-------------------*/
         public List<User> GetBySkill_1(string SkillName) //used Model User class:User
         {
@@ -182,12 +182,12 @@ namespace Grizzlies_SpyDuh.Repositories
                         };
                         users.Add(user);
                     }
-                reader.Close();
+                    reader.Close();
 
-                return users;
+                    return users;
                 }
             }
-
+        }
         public User GetByIdWithSkillsAndServices(int id)
         {
             using (var conn = Connection)
