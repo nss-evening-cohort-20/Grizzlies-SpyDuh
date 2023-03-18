@@ -64,5 +64,94 @@ namespace Grizzlies_SpyDuh.Repositories
             return new User();
         }
 
+        public User GetByIdWithSkillsAndServices(int id)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"SELECT 
+                                        u.Id AS UserId, 
+                                        u.Name AS UserName, 
+                                        Email, 
+                                        u.AgencyId, 
+                                        ag.Name AS AgencyName, 
+                                        s.Id AS SkillId, 
+                                        s.Name AS SkillName, 
+                                        svc.Id AS ServiceId, 
+                                        svc.Name AS ServiceName, 
+                                        usvc.ServicePrice 
+                                        FROM [User] u
+                                        LEFT JOIN UserSkill us
+                                        ON u.Id = us.UserId
+                                        LEFT JOIN Skill s
+                                        ON us.SkillId = s.Id
+                                        LEFT JOIN UserService usvc
+                                        ON u.Id = usvc.UserId
+                                        LEFT JOIN [Service] svc
+                                        ON svc.Id = usvc.ServiceId
+                                        LEFT JOIN Agency ag
+                                        ON ag.Id = u.AgencyId
+                                        WHERE u.Id = @Id;";
+                    DbUtils.AddParameter(cmd, "@Id", id);
+                    var reader = cmd.ExecuteReader();
+                    User user = null;
+                    while (reader.Read())
+                    {
+                        
+                        if (user == null)
+                        {
+                        user = new User()
+                        {
+                            Id = DbUtils.GetInt(reader, "UserId"),
+                            Name = DbUtils.GetString(reader, "UserName"),
+                            Email = DbUtils.GetString(reader, "Email"),
+                            AgencyId = DbUtils.GetInt(reader, "AgencyId"),
+                            Agency = new Agency()
+                            {
+                                Id = DbUtils.GetInt(reader, "AgencyId"),
+                                Name = DbUtils.GetString(reader, "AgencyName")
+                            },
+                            Skills = new List<Skill>(),
+                            Services = new List<Service>()
+                        };
+                        }
+                        
+                        if (DbUtils.IsNotDbNull(reader, "SkillId")) {
+                            var skillId = DbUtils.GetInt(reader, "SkillId");
+                        var existingSkill = user.Skills.FirstOrDefault(s => s.Id == skillId);
+                            if (existingSkill == null)
+                            {
+
+                                user.Skills.Add(new Skill()
+                                {
+                                    Id = skillId,
+                                    Name = DbUtils.GetString(reader, "SkillName")
+                                });
+                            }
+
+                        }
+
+                        if (DbUtils.IsNotDbNull(reader, "ServiceId"))
+                        {
+                            var serviceId = DbUtils.GetInt(reader, "ServiceId");
+                            var existingService = user.Services.FirstOrDefault(s => s.Id == serviceId);
+                            if (existingService == null)
+                            {
+                                user.Services.Add(new Service()
+                                {
+                                    Id = serviceId,
+                                    Name = DbUtils.GetString(reader, "ServiceName")
+                                });
+                            }
+                        }
+                    }
+                    reader.Close();
+                    return user;
+                }
+            }
+        }
+
     }
 }

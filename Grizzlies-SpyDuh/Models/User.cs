@@ -9,8 +9,8 @@
         public Agency Agency { get; set; }
         //public Skill Skill { get; set; }
         //public Service Service { get; set; }
-        //public List<Skill>Skill { get; set; }
-        //public List<Service>Service { get; set; }
+        public List<Skill> Skills { get; set; }
+        public List<Service> Services { get; set; }
 
         //public List<SpyEnemy> SpyEnemy { get; set; }
         //public List<SpyTeam>SpyTeam { get; set;}
