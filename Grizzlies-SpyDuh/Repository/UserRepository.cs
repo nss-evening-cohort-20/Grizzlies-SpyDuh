@@ -84,7 +84,7 @@ namespace Grizzlies_SpyDuh.Repositories
         }
 
         /*-------------------GetBySkill()---2-------------------*/
-        public List<UserInfo> GetBySkill_2(string SkillName) //used Model User class: UserBySkill
+        public List<UserInfo> GetBySkill_2(string SkillName) //used Model User class: UserInfo
         {
             using (var conn = Connection)
             {
@@ -142,7 +142,7 @@ namespace Grizzlies_SpyDuh.Repositories
         }
 
         /*-------------------GetAllUsers()---2-------------------*/
-        public List<UserInfo> GetAllUsers()
+        public List<UserInfo> GetAllUsers() //used Model User class: UserInfo
         {
             using (var conn = Connection)
             {
