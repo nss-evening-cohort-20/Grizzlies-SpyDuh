@@ -6,4 +6,5 @@ public interface IUserRepository
 {
     User GetBySkill(string skillName);
     User GetByIdWithSkillsAndServices(int id);
+    public void Add(User user);
 }
