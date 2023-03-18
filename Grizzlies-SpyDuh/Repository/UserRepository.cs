@@ -277,5 +277,26 @@ namespace Grizzlies_SpyDuh.Repositories
             }
         }
 
+        public void Add(User user)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"INSERT INTO [User]
+                                            (Name,
+                                            Email,
+                                            AgencyId)
+                                        OUTPUT INSERTED.ID
+                                        VALUES (@Name, @Email, @AgencyId)";
+
+                    DbUtils.AddParameter(cmd, "@Name", user.Name);
+                    DbUtils.AddParameter(cmd, "@Email", user.Email);
+                    DbUtils.AddParameter(cmd, "@AgencyId", user.AgencyId);
+                    user.Id = (int)cmd.ExecuteScalar();
+                }
+            }
+        }
     }
 }
