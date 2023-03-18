@@ -29,4 +29,22 @@ public class UserController : ControllerBase
         }
         return Ok(user);
     }
+
+    /*---------------------------------------------*/
+
+    [HttpGet("GetUserBySkill/{skillName}")]//Taco
+    public IActionResult GetUser_BySkill(string skillName)//Taco
+    {
+        //return Ok(_userRepository.GetBySkill_1(skillName));//used Model User class:User
+        return Ok(_userRepository.GetBySkill_2(skillName));//used Model User class: UserBySkill
+    }
+    /*---------------------------------------------*/
+    [HttpGet("GetAll/Users")]//Taco
+    public IActionResult GetAll_Users()//Taco
+    {
+        return Ok(_userRepository.GetAllUsers());
+    }
+    /*---------------------------------------------*/
 }
+
+
