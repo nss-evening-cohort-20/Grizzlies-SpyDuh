@@ -4,6 +4,7 @@ using Grizzlies_SpyDuh.Utils;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Hosting;
 using System.Collections.Generic;
+using System.Reflection.PortableExecutable;
 
 namespace Grizzlies_SpyDuh.Repositories
 {
@@ -83,7 +84,7 @@ namespace Grizzlies_SpyDuh.Repositories
         }
 
         /*-------------------GetBySkill()---2-------------------*/
-        public List<UserBySkill> GetBySkill_2(string SkillName) //used Model User class: UserBySkill
+        public List<UserInfo> GetBySkill_2(string SkillName) //used Model User class: UserBySkill
         {
             using (var conn = Connection)
             {
@@ -109,10 +110,10 @@ namespace Grizzlies_SpyDuh.Repositories
 
                     var reader = cmd.ExecuteReader();
 
-                    var users = new List<UserBySkill>();
+                    var users = new List<UserInfo>();
                     while (reader.Read())
                     {
-                        var user = new UserBySkill()
+                        var user = new UserInfo()
                         {
                             Id = DbUtils.GetInt(reader, "Id"),
                             Name = DbUtils.GetString(reader, "UserName"),
@@ -141,7 +142,53 @@ namespace Grizzlies_SpyDuh.Repositories
         }
 
         /*-------------------GetAllUsers()---2-------------------*/
+        public List<UserInfo> GetAllUsers()
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @" SELECT
+        [User].Id AS UserId,
+        [User].Name As UserName, 
+        [User].Email, 
+        Skill.Name As SkillName
+        FROM [User] 
+        INNER JOIN UserSkill ON UserSkill.UserId = [User].Id
+        INNER JOIN Skill ON Skill.Id = UserSkill.SkillId";
 
+                    var reader = cmd.ExecuteReader();
 
+                    var users = new List<UserInfo>();
+                    while (reader.Read())
+                    {
+                        var user = new UserInfo()
+                        {
+                            Id = DbUtils.GetInt(reader, "UserId"),
+                            Name = DbUtils.GetString(reader, "UserName"),
+                            Email = DbUtils.GetString(reader, "Email"),
+                            Skills = new List<Skill>()
+                        };
+
+                        if (DbUtils.IsNotDbNull(reader, "UserName"))
+                        {
+                            var skillNamex = DbUtils.GetString(reader, "SkillName");
+                            user.Skills.Add(new Skill()
+                            {
+                                //Id = DbUtils.GetInt(reader, "Id"),
+                                Name = skillNamex //skillName
+                            });
+                        };
+                        users.Add(user);
+                    }
+                reader.Close();
+
+                return users;
+                }
+            }
+
+        }
     }
 }
+

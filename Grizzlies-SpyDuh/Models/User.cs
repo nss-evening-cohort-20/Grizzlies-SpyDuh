@@ -17,7 +17,7 @@
 
     }
 
-    public class UserBySkill //concise User properties
+    public class UserInfo //concise User properties
     {
         public int Id { get; set; }
         public string Name { get; set; }
