@@ -15,6 +15,21 @@ public class UserController : ControllerBase
         _userRepository = userRepository;
     }
 
+    [HttpGet("{id}/SkillsServices")]
+    public IActionResult GetByIdWithSkillsServices(int id)
+    {
+        if (id == 0)
+        {
+            return BadRequest();
+        }
+        var user = _userRepository.GetByIdWithSkillsAndServices(id);
+        if (user == null)
+        {
+            return BadRequest();
+        }
+        return Ok(user);
+    }
+
     /*---------------------------------------------*/
 
     [HttpGet("GetUserBySkill/{skillName}")]//Taco

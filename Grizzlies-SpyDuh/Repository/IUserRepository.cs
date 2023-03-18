@@ -7,4 +7,5 @@ public interface IUserRepository
     List<User> GetBySkill_1(string skillName);
     List<UserInfo> GetBySkill_2(string skillName);
     public List<UserInfo> GetAllUsers();
+    User GetByIdWithSkillsAndServices(int id);
 }
