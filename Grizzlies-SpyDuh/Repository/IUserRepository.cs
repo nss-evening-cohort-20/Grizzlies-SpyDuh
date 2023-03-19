@@ -9,4 +9,5 @@ public interface IUserRepository
     public List<UserInfo> GetAllUsers();
     User GetByIdWithSkillsAndServices(int id);
     public void Add(User user);
+    public List<User> GetNonHandlerByAgencyId(int agencyId);
 }
