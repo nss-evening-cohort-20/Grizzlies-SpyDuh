@@ -45,6 +45,12 @@ public class UserController : ControllerBase
         return Ok(_userRepository.GetAllUsers());
     }
     /*---------------------------------------------*/
+    [HttpGet("GetUserEnemies/{userName}")]//Taco
+    public IActionResult Get_Enemies(string userName)//Taco
+    {
+        //return Ok(_userRepository.GetBySkill_1(skillName));//used Model User class:User
+        return Ok(_userRepository.GetEnemies(userName));//used Model User class: UserBySkill
+    }
 }
 
 

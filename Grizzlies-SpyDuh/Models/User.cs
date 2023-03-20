@@ -22,5 +22,11 @@
         public string Email { get; set; }
         public List<Skill> Skills { get; set; }
     }
+
+    public class UserEnemy //concise User properties
+    {
+        public string Name { get; set; }
+        public string Email { get; set; }
+        public List<SpyEnemy> SpyEnemies { get; set; }
+    }
 }
-//we can add user image
