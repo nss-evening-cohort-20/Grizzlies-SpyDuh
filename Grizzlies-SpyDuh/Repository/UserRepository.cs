@@ -1,4 +1,4 @@
-﻿using Grizzlies_SpyDuh.Repositories;
+using Grizzlies_SpyDuh.Repositories;
 using Grizzlies_SpyDuh.Models;
 using Grizzlies_SpyDuh.Utils;
 using Microsoft.Data.SqlClient;
@@ -279,7 +279,7 @@ namespace Grizzlies_SpyDuh.Repositories
             }
         }
 
-        // /*-------------------GetEnemies()----------------------*/
+        /*-------------------GetEnemies()----------------------*/
         public List<UserEnemy> GetEnemies(string userName) //Tom Bishop
         {
             using (var conn = Connection)
@@ -320,10 +320,27 @@ namespace Grizzlies_SpyDuh.Repositories
                 }
             }
         }
+        /*-------------------Add()----------------------*/
+        public void Add(User user)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"INSERT INTO [User]
+                                            (Name,
+                                            Email,
+                                            AgencyId)
+                                        OUTPUT INSERTED.ID
+                                        VALUES (@Name, @Email, @AgencyId)";
 
-
-
-
-
+                    DbUtils.AddParameter(cmd, "@Name", user.Name);
+                    DbUtils.AddParameter(cmd, "@Email", user.Email);
+                    DbUtils.AddParameter(cmd, "@AgencyId", user.AgencyId);
+                    user.Id = (int)cmd.ExecuteScalar();
+                }
+            }
+        }
     }
 }

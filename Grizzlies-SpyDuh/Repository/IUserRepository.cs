@@ -9,4 +9,6 @@ public interface IUserRepository
     public List<UserInfo> GetAllUsers();
     User GetByIdWithSkillsAndServices(int id);
     List<UserEnemy> GetEnemies(string userName);
+    public void Add(User user);
+
 }
