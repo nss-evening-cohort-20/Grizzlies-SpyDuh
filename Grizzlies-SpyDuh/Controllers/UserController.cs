@@ -53,6 +53,13 @@ public class UserController : ControllerBase
         _userRepository.Add(user);
         return Created("", user);
     }
+
+    [HttpGet("GetByAgency")]
+    public IActionResult GetNonHandlerByAgencyId(int agencyId)
+    {
+        var users = _userRepository.GetNonHandlerByAgencyId(agencyId);
+        return Ok(users);
+    }
 }
 
 
