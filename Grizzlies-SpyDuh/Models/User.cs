@@ -22,5 +22,12 @@
         public string Email { get; set; }
         public List<Skill> Skills { get; set; }
     }
+
+    public class SkillCount
+    {
+        public int Id { get; set; }
+        public string SkillName { get; set; }
+        public int  CountSkill { get; set; }
+    }
 }
 //we can add user image

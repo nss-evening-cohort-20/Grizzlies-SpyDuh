@@ -83,7 +83,7 @@ namespace Grizzlies_SpyDuh.Repositories
             }
         }
 
-        /*-------------------GetBySkill()---2-------------------*/
+        /*-------------------GetSkillCounr()---2-------------------*/
         public List<UserInfo> GetBySkill_2(string SkillName) //used Model User class: UserInfo
         {
             using (var conn = Connection)
@@ -140,6 +140,7 @@ namespace Grizzlies_SpyDuh.Repositories
 
             }
         }
+
 
         /*-------------------GetAllUsers()---2-------------------*/
         public List<UserInfo> GetAllUsers() //used Model User class: UserInfo
@@ -298,5 +299,61 @@ namespace Grizzlies_SpyDuh.Repositories
                 }
             }
         }
+        /*------------------------------------------------------------------------*/
+
+        /*--------------------------------------*/
+        /*-------------------GetSkillCounr()---2-------------------*/
+        //public void GetSkillCounr(string SkillName) //used Model User class: UserInfo
+        //{
+        //    using (var conn = Connection)
+        //    {
+        //        conn.Open();
+        //        using (var cmd = conn.CreateCommand())
+        //        {
+        //            cmd.CommandText = @"         
+        //SELECT count(*) as SkillCount, 
+        //Skill.Name As SkillName
+        //FROM [User] 
+        //INNER JOIN UserSkill ON UserSkill.UserId = [User].Id
+        //INNER JOIN Skill ON Skill.Id = UserSkill.SkillId
+        //WHERE Skill.Name= @Name
+        //Group by  Skill.Name";
+
+        //            DbUtils.AddParameter(cmd, "@Name", SkillName);
+
+        //            var reader = cmd.ExecuteReader();
+
+        //            //var users = new List<UserInfo>();
+        //            while (reader.Read())
+        //            {
+        //                var count = new SkillCount()
+        //                {
+        //                    Id = DbUtils.GetInt(reader, "Id"),
+        //                    SkillName = DbUtils.GetString(reader, "SkillName"),
+        //                    CountSkill = DbUtils.GetInt(reader, "Email"),
+        //                };
+
+        //                //if (DbUtils.IsNotDbNull(reader, "UserName"))
+        //                //{
+        //                //    var skillNamex = DbUtils.GetString(reader, "SkillName");
+        //                //    user.Skills.Add(new Skill()
+        //                //    {
+        //                //        count = SkillCount,
+        //                //        Name = skillNamex //skillName
+
+        //                //    });
+        //                //};
+
+        //                //users.Add(user);
+        //            }
+        //            reader.Close();
+
+        //            // return count;
+        //        }
+
+        //    }
+        //}
+
     }
 }
+

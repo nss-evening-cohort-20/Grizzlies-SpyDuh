@@ -53,6 +53,16 @@ public class UserController : ControllerBase
         _userRepository.Add(user);
         return Created("", user);
     }
+
+
+    /*---------------------------------------------*/
+
+    //[HttpGet("GetSkillCounr/{SkillName}")]//Taco
+    //public IActionResult CounSkill(string SkillName)//Taco
+    //{
+    //    return Ok(_userRepository.GetSkillCounr(SkillName));
+
+    //}
 }
 
 
