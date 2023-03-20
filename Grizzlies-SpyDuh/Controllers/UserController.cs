@@ -47,6 +47,12 @@ public class UserController : ControllerBase
     }
     /*---------------------------------------------*/
 
+    [HttpGet("GetUserEnemies/{userName}")]//Taco
+    public IActionResult Get_Enemies(string userName)//Taco
+    {
+        //return Ok(_userRepository.GetBySkill_1(skillName));
+        return Ok(_userRepository.GetEnemies(userName));
+    /*---------------------------------------------*/
     [HttpPost]
     public IActionResult Post(User user)
     {
