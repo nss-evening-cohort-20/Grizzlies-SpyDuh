@@ -10,5 +10,5 @@ public interface IUserRepository
     User GetByIdWithSkillsAndServices(int id);
     List<UserEnemy> GetEnemies(string userName);
     public void Add(User user);
-
+    public List<User> GetNonHandlerByAgencyId(int agencyId);
 }
