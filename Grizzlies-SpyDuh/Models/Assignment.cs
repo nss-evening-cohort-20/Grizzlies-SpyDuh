@@ -12,5 +12,6 @@ public class Assignment
 
     public List<UserAssignment> UserAssignments { get; set; }
 
-    public int? DaysRemainingInAssignment => EndMissionDateTime.HasValue ? (EndMissionDateTime.Value - DateTime.Today).Days : null;
+    public bool IsComplete => (EndMissionDateTime.HasValue && EndMissionDateTime.Value < DateTime.Today) ? true : false;
+    public int? DaysRemainingInAssignment => (EndMissionDateTime.HasValue && EndMissionDateTime.Value > DateTime.Today) ? (EndMissionDateTime.Value - DateTime.Today ).Days : null;
 }
