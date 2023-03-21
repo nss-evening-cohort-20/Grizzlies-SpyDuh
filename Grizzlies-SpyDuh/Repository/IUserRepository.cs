@@ -10,6 +10,7 @@ public interface IUserRepository
     User GetByIdWithSkillsAndServices(int id);
     List<UserEnemy> GetEnemies(string userName);
     public void Add(User user);
+    public SkillCount GetSkillCounr(string SkillName);
     public List<User> GetNonHandlerByAgencyId(int agencyId);
     public void UpdateUserService(UserService userService);
     public void DeleteUserService(int id);
