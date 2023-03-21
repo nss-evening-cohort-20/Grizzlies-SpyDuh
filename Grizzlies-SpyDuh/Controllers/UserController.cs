@@ -105,6 +105,19 @@ public class UserController : ControllerBase
         _userRepository.DeleteUserSkill(id);
         return NoContent();
     }
+
+    public IActionResult UpdateUser(int id, UserEnemy UserEnemy)
+    {
+        if (id != UserEnemy.Id)
+        {
+            return BadRequest();
+        }
+
+        _userRepository.UpdateUser(UserEnemy);
+        return NoContent();
+    }
+
+
 }
 
 

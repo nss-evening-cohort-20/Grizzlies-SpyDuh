@@ -511,5 +511,30 @@ namespace Grizzlies_SpyDuh.Repositories
                 }
             }
         }
+
+        /*-------------------------------UpdateUser()--------------------------------------*/
+        public void UpdateUser(UserEnemy UserEnemy)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                    UPDATE User 
+                    SET Name = @Name, 
+                        Email = @Email 
+                    WHERE Id = @Id";
+
+                    DbUtils.AddParameter(cmd, "@Id", UserEnemy.Id);
+                    DbUtils.AddParameter(cmd, "@Name", UserEnemy.Name);
+                    DbUtils.AddParameter(cmd, "@Email", UserEnemy.Email);
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+
     }
 }
