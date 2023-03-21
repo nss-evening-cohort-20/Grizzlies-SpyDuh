@@ -342,7 +342,45 @@ namespace Grizzlies_SpyDuh.Repositories
                 }
             }
         }
+        /*-------------------GetSkillCounr()---2-------------------*/
+        public SkillCount GetSkillCounr(string SkillName) //used Model User class: UserInfo
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"         
+        SELECT count(*) as CountSkill, 
+        Skill.Name As SkillName
+        FROM [User] 
+        INNER JOIN UserSkill ON UserSkill.UserId = [User].Id
+        INNER JOIN Skill ON Skill.Id = UserSkill.SkillId
+        WHERE Skill.Name= @Name
+        Group by  Skill.Name";
 
+                    DbUtils.AddParameter(cmd, "@Name", SkillName);
+
+                    var reader = cmd.ExecuteReader();
+
+                    var counts = new SkillCount();
+                    while (reader.Read())
+                    { 
+                         counts = new SkillCount()
+                        {
+                            SkillName = SkillName,
+                            CountSkill = DbUtils.GetInt(reader, "CountSkill"),
+                        };
+
+
+                    }
+                    reader.Close();
+
+                     return counts;
+                }
+
+            }
+        }
         /*-------------------GetNonHandlerByAgencyId()----------------------*/
         public List<User> GetNonHandlerByAgencyId(int agencyId)
         {
@@ -438,45 +476,82 @@ namespace Grizzlies_SpyDuh.Repositories
                 }
             }
         }
-        /*-------------------GetSkillCounr()----------------------*/
-        public SkillCount GetSkillCounr(string SkillName) //used Model User class: UserInfo
+
+        /*-----------------------------------------------*/
+        public void UpdateUserService(UserService userService)
         {
             using (var conn = Connection)
             {
                 conn.Open();
                 using (var cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = @"         
-        SELECT count(*) as CountSkill, 
-        Skill.Name As SkillName
-        FROM [User] 
-        INNER JOIN UserSkill ON UserSkill.UserId = [User].Id
-        INNER JOIN Skill ON Skill.Id = UserSkill.SkillId
-        WHERE Skill.Name= @Name
-        Group by  Skill.Name";
+                    cmd.CommandText = @"UPDATE UserService
+	                                        SET ServiceId = @ServiceId,
+		                                        UserId = @UserId,
+		                                        ServicePrice = @ServicePrice
+                                        WHERE Id = @Id;";
 
-                    DbUtils.AddParameter(cmd, "@Name", SkillName);
+                    DbUtils.AddParameter(cmd, "@ServiceId", userService.ServiceId);
+                    DbUtils.AddParameter(cmd, "@UserId", userService.UserId);
+                    DbUtils.AddParameter(cmd, "@ServicePrice", userService.ServicePrice);
+                    DbUtils.AddParameter(cmd, "@Id", userService.Id);
 
-                    var reader = cmd.ExecuteReader();
-
-                    var counts = new SkillCount();
-                    while (reader.Read())
-                    { 
-                         counts = new SkillCount()
-                        {
-                            SkillName = SkillName,
-                            CountSkill = DbUtils.GetInt(reader, "CountSkill"),
-                        };
-
-
-                    }
-                    reader.Close();
-
-                     return counts;
+                    cmd.ExecuteNonQuery();
                 }
-
             }
         }
+        /*-----------------------------------------------*/
+        public void DeleteUserService(int id)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = "DELETE FROM UserService WHERE Id = @Id";
+                    DbUtils.AddParameter(cmd, "@Id", id);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+        /*-----------------------------------------------*/
+        public void UpdateUserSkill(UserSkill userSkill)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"UPDATE UserSkill
+	                                        SET SkillId = @SkillId,
+		                                        UserId = @UserId,
+		                                        SkillLevel = @SkillLevel
+                                        WHERE Id = @Id;";
+
+                    DbUtils.AddParameter(cmd, "@SkillId", userSkill.SkillId);
+                    DbUtils.AddParameter(cmd, "@UserId", userSkill.UserId);
+                    DbUtils.AddParameter(cmd, "@SkillLevel", userSkill.SkillLevel);
+                    DbUtils.AddParameter(cmd, "@Id", userSkill.Id);
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+        /*-----------------------------------------------*/
+        public void DeleteUserSkill(int id)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = "DELETE FROM UserSkill WHERE Id = @Id";
+                    DbUtils.AddParameter(cmd, "@Id", id);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
 
     }
 }
