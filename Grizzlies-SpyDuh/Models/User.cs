@@ -24,11 +24,17 @@
         public List<Skill> Skills { get; set; }
     }
 
+    public class SkillCount
+    {
+        public string SkillName { get; set; }
+        public int  CountSkill { get; set; }
 
-    public class UserEnemy //concise User properties
+
+    public class UserEnemy 
     {
         public string Name { get; set; }
         public string Email { get; set; }
+
     }
 }
 

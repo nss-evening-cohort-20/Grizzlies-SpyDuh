@@ -61,11 +61,20 @@ public class UserController : ControllerBase
         return Created("", user);
     }
 
+    /*---------------------------------------------*/
+
+    [HttpGet("GetSkillCounr/{SkillName}")]
+    public IActionResult CounSkill(string SkillName)
+    {
+        return Ok(_userRepository.GetSkillCounr(SkillName));
+
+
     [HttpGet("GetByAgency")]
     public IActionResult GetNonHandlerByAgencyId(int agencyId)
     {
         var users = _userRepository.GetNonHandlerByAgencyId(agencyId);
         return Ok(users);
+
     }
 
     [HttpPut("UserService/{id}")]
