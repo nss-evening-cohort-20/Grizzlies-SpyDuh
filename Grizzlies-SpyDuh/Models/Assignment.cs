@@ -8,9 +8,9 @@ public class Assignment
     public Agency Agency { get; set; }
     public bool Fatal { get; set; }
     public DateTime StartMissionDateTime { get; set; }
-    public DateTime EndMissionDateTime { get; set;}
+    public DateTime? EndMissionDateTime { get; set; }
 
     public List<UserAssignment> UserAssignments { get; set; }
 
-    public int DaysRemainingInAssignment => (EndMissionDateTime - DateTime.Today).Days;
+    public int? DaysRemainingInAssignment => EndMissionDateTime.HasValue ? (EndMissionDateTime.Value - DateTime.Today).Days : null;
 }
