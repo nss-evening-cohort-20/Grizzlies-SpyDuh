@@ -34,14 +34,12 @@ public class AgencyRepository : BaseRepository, IAgencyRepository
 
                 while (reader.Read())
                 {
-                    var agency = new Agency()
+                    agencies.Add(new Agency()
                     {
                         Id = DbUtils.GetInt(reader, "Id"),
                         Name = DbUtils.GetString(reader, "Agency"),
                         AvgSkillLevel = DbUtils.GetDouble(reader, "AvgSkillLevel")
-                    };
-
-                    agencies.Add(agency);
+                    });
                 }
 
                 reader.Close();
