@@ -8,4 +8,7 @@ public interface IUserRepository
     List<UserInfo> GetBySkill_2(string skillName);
     public List<UserInfo> GetAllUsers();
     User GetByIdWithSkillsAndServices(int id);
+    List<UserEnemy> GetEnemies(string userName);
+    public void Add(User user);
+    public List<User> GetNonHandlerByAgencyId(int agencyId);
 }

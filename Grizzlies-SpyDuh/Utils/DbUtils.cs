@@ -37,6 +37,16 @@ namespace Grizzlies_SpyDuh.Utils
             return reader.GetInt32(reader.GetOrdinal(column));
         }
 
+        public static double GetDouble(SqlDataReader reader, string column)
+        {
+            return reader.GetDouble(reader.GetOrdinal(column));
+        }
+
+        public static bool GetBoolean(SqlDataReader reader, string column)
+        {
+            return reader.GetBoolean(reader.GetOrdinal(column));
+        }
+
         /// <summary>
         ///  Get a DateTime from a data reader object.
         ///  This method assumes the value is not NULL.

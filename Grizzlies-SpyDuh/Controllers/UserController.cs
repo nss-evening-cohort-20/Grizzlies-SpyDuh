@@ -1,4 +1,5 @@
-﻿using Grizzlies_SpyDuh.Repositories;
+﻿using Grizzlies_SpyDuh.Models;
+using Grizzlies_SpyDuh.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -45,6 +46,26 @@ public class UserController : ControllerBase
         return Ok(_userRepository.GetAllUsers());
     }
     /*---------------------------------------------*/
+
+    [HttpGet("GetUserEnemies/{userName}")]//Taco
+    public IActionResult Get_Enemies(string userName)//Taco
+    {
+        //return Ok(_userRepository.GetBySkill_1(skillName));
+        return Ok(_userRepository.GetEnemies(userName));
+    /*---------------------------------------------*/
+    [HttpPost]
+    public IActionResult Post(User user)
+    {
+        _userRepository.Add(user);
+        return Created("", user);
+    }
+
+    [HttpGet("GetByAgency")]
+    public IActionResult GetNonHandlerByAgencyId(int agencyId)
+    {
+        var users = _userRepository.GetNonHandlerByAgencyId(agencyId);
+        return Ok(users);
+    }
 }
 
 

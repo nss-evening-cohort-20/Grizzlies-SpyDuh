@@ -6,22 +6,23 @@ GO
 USE [SpyDuh]
 GO
 
-DROP TABLE IF EXISTS [User];
-DROP TABLE IF EXISTS [UserSkill];
-DROP TABLE IF EXISTS [Service];
-DROP TABLE IF EXISTS [Skill];
+DROP TABLE IF EXISTS [UserAssignment];
+DROP TABLE IF EXISTS [Assignment];
 DROP TABLE IF EXISTS [UserService];
-DROP TABLE IF EXISTS [Agency];
+DROP TABLE IF EXISTS [Service];
+DROP TABLE IF EXISTS [UserSkill];
+DROP TABLE IF EXISTS [Skill];
 DROP TABLE IF EXISTS [SpyEnemy];
 DROP TABLE IF EXISTS [SpyTeam];
-DROP TABLE IF EXISTS [Assignment];
-DROP TABLE IF EXISTS [UserAssignment];
+DROP TABLE IF EXISTS [User];
+DROP TABLE IF EXISTS [Agency];
 
 CREATE TABLE [User] (
   [Id] int PRIMARY KEY identity not null,
   [Name] nvarchar(255) not null,
   [Email] nvarchar(255),
-  [AgencyId] int default 0
+  [AgencyId] int,
+  [IsHandler] bit,
 )
 GO
 
@@ -63,13 +64,12 @@ CREATE TABLE [UserService] (
   [Id] int PRIMARY KEY identity,
   [ServiceId] int not null,
   [UserId] int not null,
-  [ServicePrice] money not null
+  [ServicePrice] float not null
 )
 GO
 
 CREATE TABLE [Agency] (
   [Id] int PRIMARY KEY identity,
-  [Handler] bit not null,
   [Name] nvarchar(255) not null
 )
 GO
@@ -131,13 +131,12 @@ GO
 --Starter Data for Agency Table
 
 INSERT INTO [dbo].[Agency]
-           ([Handler]
-           ,[Name])
-     VALUES(0,'Michael Westen'),
-           (1,'John Drake'),
-           (0,'Edgar Brodie'),
-           (0,'Richard Hannay'),
-           (1,'Alicia Huberman')    
+           ([Name])
+     VALUES('Defense Intelligence Agency'),
+           ('National Security Agency'),
+           ('Spies R Us'),
+           ('CIA'),
+		   ('Spies Inc.')
 GO
 
 
@@ -145,30 +144,31 @@ GO
 INSERT INTO [dbo].[User]
            ([Name]
            ,[Email]
-           ,[AgencyId])
+           ,[AgencyId]
+		   ,[IsHandler])
      VALUES
-           ('Harry Palmer', 'hpalmer@Spyduh.org',2),
-           ('Tom Bishop', 'tpishop@Spyduh.org',1),
-           ('Roger Thornhill', 'rhornhill@Spyduh.org',5),
-           ('Annie Walker', 'aWalker@Spyduh.org',3),
-           ('Black Widow', 'bwidow@Spyduh.org',5),
-           ('William Brandt', 'wbrandt@Spyduh.org',2),
-           ('Felix Leiter', 'fleiterr@Spyduh.org',4),
-           ('Nathan Muir', 'nmuir@Spyduh.org',1),
-           ('Evelyn Salt', null,3),
-           ('Carrie Mathison', null,1),
-           ('Jack Ryan', 'jryan@Spyduh.org',4),
-           ('Nick Fury', 'nfury@Spyduh.org',2),
-           ('Sarah Walker', 'swalker@Spyduh.org',5),
-           ('Austin Powers', 'apowers@Spyduh.org',3),
-           ('Emma Peel', null,4),
-           ('Napoleon Solo', 'nsolo.org',3),
-           ('Harry Hart', 'hart@Spyduh.org',2),
-           ('Maxwell Smart', null,4),
-           ('Sydney Bristow', 'sbristow@Spyduh.org',5),
-           ('George Smiley', 'gsmiley@Spyduh.org',3),
-           ('Ethan Hunt', null,4),
-           ('Illya Kuryakin', null,4)
+           ('Harry Palmer', 'hpalmer@Spyduh.org',2, 1),
+           ('Tom Bishop', 'tpishop@Spyduh.org',1, 1),
+           ('Roger Thornhill', 'rhornhill@Spyduh.org',5, 1),
+           ('Annie Walker', 'aWalker@Spyduh.org',3, 1),
+           ('Black Widow', 'bwidow@Spyduh.org',5, 0),
+           ('William Brandt', 'wbrandt@Spyduh.org',2, 0),
+           ('Felix Leiter', 'fleiterr@Spyduh.org',4, 1),
+           ('Nathan Muir', 'nmuir@Spyduh.org',1, 0),
+           ('Evelyn Salt', null,3, 0),
+           ('Carrie Mathison', null, null, null),
+           ('Jack Ryan', 'jryan@Spyduh.org', null, null),
+           ('Nick Fury', 'nfury@Spyduh.org', null, null),
+           ('Sarah Walker', 'swalker@Spyduh.org',2, 0),
+           ('Austin Powers', 'apowers@Spyduh.org', null, null),
+           ('Emma Peel', null,1, 0),
+           ('Napoleon Solo', 'nsolo.org',4, 0),
+           ('Harry Hart', 'hart@Spyduh.org', null, null),
+           ('Maxwell Smart', null, null, null),
+           ('Sydney Bristow', 'sbristow@Spyduh.org',5, 0),
+           ('George Smiley', 'gsmiley@Spyduh.org', null, null),
+           ('Ethan Hunt', null,3, 0),
+           ('Illya Kuryakin', null,4, 0)
 GO
 
 
@@ -316,5 +316,4 @@ values	(1,2,5)
 		,(21,6,10)
 		,(22,7,8)
 		,(22,10,10)
-
-
+GO

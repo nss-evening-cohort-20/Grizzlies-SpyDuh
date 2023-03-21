@@ -7,5 +7,5 @@ public class UserService
     public Service Service { get; set; }
     public int UserId { get; set; }
     public User User { get; set; }
-    public float ServicePrice { get; set; }
+    public double ServicePrice { get; set; }
 }
