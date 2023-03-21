@@ -57,12 +57,12 @@ public class UserController : ControllerBase
 
     /*---------------------------------------------*/
 
-    //[HttpGet("GetSkillCounr/{SkillName}")]//Taco
-    //public IActionResult CounSkill(string SkillName)//Taco
-    //{
-    //    return Ok(_userRepository.GetSkillCounr(SkillName));
+    [HttpGet("GetSkillCounr/{SkillName}")]
+    public IActionResult CounSkill(string SkillName)
+    {
+        return Ok(_userRepository.GetSkillCounr(SkillName));
 
-    //}
+    }
 }
 
 

@@ -25,9 +25,9 @@
 
     public class SkillCount
     {
-        public int Id { get; set; }
         public string SkillName { get; set; }
         public int  CountSkill { get; set; }
+
     }
 }
 //we can add user image

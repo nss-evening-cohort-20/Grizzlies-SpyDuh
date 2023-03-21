@@ -9,5 +9,5 @@ public interface IUserRepository
     public List<UserInfo> GetAllUsers();
     User GetByIdWithSkillsAndServices(int id);
     public void Add(User user);
-    //public void GetSkillCounr(string SkillName);
+    public SkillCount GetSkillCounr(string SkillName);
 }
