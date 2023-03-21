@@ -4,6 +4,7 @@
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        
+        public User? Handler { get; set; }
+        public double? AvgSkillLevel { get; set; }
     }
 }
