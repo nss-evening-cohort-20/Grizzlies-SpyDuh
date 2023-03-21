@@ -106,28 +106,204 @@ public class AssignmentRepository : BaseRepository, IAssignmentRepository
     }
     public List<Assignment> GetByAgencyId(int agencyId)
     {
-        throw new NotImplementedException();
 
-        //In controller, get list of query string paremeters, and split into array.
-        //pass array of Ids here.
-        //with a WHERE IN clause, nothing will break if a bad ID is sent.
-        //use agency list in sql parameter list along with In keyword
-        //return list of results like normal
+        //var idList = agencyIds.Split(",");
+        //List<int> listOfInts = new List<int>();
+        //foreach (var id in idList)
+        //{
+        //    var parsedId = int.Parse(id);
+        //    listOfInts.Add(parsedId);
+        //}
+        using (var conn = Connection)
+        {
+            conn.Open();
+            using (var cmd = conn.CreateCommand())
+            {
+                cmd.CommandText = @"   SELECT  [Assignment].[Id] AS AssignmentId
+                                    ,[Description]
+                                    ,[Fatal]
+                                    ,[StartMissionDateTime]
+                                    ,[EndMissionDateTime]
+	                                ,[AgencyId]
+	                                ,[Agency].Name AS AgencyName 
+                                  FROM [SpyDuh].[dbo].[Assignment]
+                                  LEFT JOIN Agency
+                                  ON Agency.Id = Assignment.AgencyId
+                                  WHERE Agency.Id IN (@AgencyIds)";
+
+                DbUtils.AddParameter(cmd, "@AgencyIds", agencyId);
+                var reader = cmd.ExecuteReader();
+
+                var assignments = new List<Assignment>();
+                while (reader.Read())
+                {
+                    var assignment = new Assignment()
+                    {
+                        Id = DbUtils.GetInt(reader, "AssignmentId"),
+                        Description = DbUtils.GetString(reader, "Description"),
+                        Fatal = DbUtils.GetBoolean(reader, "Fatal"),
+                        StartMissionDateTime = DbUtils.GetDateTime(reader, "StartMissionDateTime"),
+                        EndMissionDateTime = DbUtils.IsNotDbNull(reader, "EndMissionDateTime") ? DbUtils.GetDateTime(reader, "EndMissionDateTime") : null,
+                        AgencyId = DbUtils.GetInt(reader, "AgencyId"),
+                        Agency = new Agency()
+                        {
+                            Id = DbUtils.GetInt(reader, "AgencyId"),
+                            Name = DbUtils.GetString(reader, "AgencyName"),
+                        }
+                    };
+                    assignments.Add(assignment);
+                }
+                reader.Close();
+                return assignments;
+            }
+        }
     }
     public List<Assignment> GetAllOngoingAssignments()
     {
-        throw new NotImplementedException();
+
+        using (var conn = Connection)
+        {
+            conn.Open();
+            using (var cmd = conn.CreateCommand())
+            {
+                cmd.CommandText = @"  SELECT  [Assignment].[Id] AS AssignmentId
+                                    ,[Description]
+                                    ,[Fatal]
+                                    ,[StartMissionDateTime]
+                                    ,[EndMissionDateTime]
+	                                ,[AgencyId]
+	                                ,[Agency].Name AS AgencyName 
+                                  FROM [SpyDuh].[dbo].[Assignment]
+                                  LEFT JOIN Agency
+                                  ON Agency.Id = Assignment.AgencyId
+                                  WHERE EndMissionDateTime > GetDate() OR EndMissionDateTime IS NULL";
+
+
+                var reader = cmd.ExecuteReader();
+
+                var assignments = new List<Assignment>();
+                while (reader.Read())
+                {
+                    var assignment = new Assignment()
+                    {
+                        Id = DbUtils.GetInt(reader, "AssignmentId"),
+                        Description = DbUtils.GetString(reader, "Description"),
+                        Fatal = DbUtils.GetBoolean(reader, "Fatal"),
+                        StartMissionDateTime = DbUtils.GetDateTime(reader, "StartMissionDateTime"),
+                        EndMissionDateTime = DbUtils.IsNotDbNull(reader, "EndMissionDateTime") ? DbUtils.GetDateTime(reader, "EndMissionDateTime") : null,
+                        AgencyId = DbUtils.GetInt(reader, "AgencyId"),
+                        Agency = new Agency()
+                        {
+                            Id = DbUtils.GetInt(reader, "AgencyId"),
+                            Name = DbUtils.GetString(reader, "AgencyName"),
+                        }
+                    };
+                    assignments.Add(assignment);
+                }
+                reader.Close();
+                return assignments;
+            }
+        }
     }
-    public List<Assignment> GetOngoingAssignmentsByAgency(int userId)
+    public List<Assignment> GetOngoingAssignmentsByAgency(int agencyId)
     {
-        throw new NotImplementedException();
+        using (var conn = Connection)
+        {
+            conn.Open();
+            using (var cmd = conn.CreateCommand())
+            {
+                cmd.CommandText = @" SELECT  [Assignment].[Id] AS AssignmentId
+                                    ,[Description]
+                                    ,[Fatal]
+                                    ,[StartMissionDateTime]
+                                    ,[EndMissionDateTime]
+	                                ,[AgencyId]
+	                                ,[Agency].Name AS AgencyName 
+                                  FROM [SpyDuh].[dbo].[Assignment]
+                                  LEFT JOIN Agency
+                                  ON Agency.Id = Assignment.AgencyId
+                                  WHERE (EndMissionDateTime > GetDate() OR EndMissionDateTime IS NULL) AND Agency.Id = @Id";
+
+                DbUtils.AddParameter(cmd, "@Id", agencyId);
+                var reader = cmd.ExecuteReader();
+
+                var assignments = new List<Assignment>();
+                while (reader.Read())
+                {
+                    var assignment = new Assignment()
+                    {
+                        Id = DbUtils.GetInt(reader, "AssignmentId"),
+                        Description = DbUtils.GetString(reader, "Description"),
+                        Fatal = DbUtils.GetBoolean(reader, "Fatal"),
+                        StartMissionDateTime = DbUtils.GetDateTime(reader, "StartMissionDateTime"),
+                        EndMissionDateTime = DbUtils.IsNotDbNull(reader, "EndMissionDateTime") ? DbUtils.GetDateTime(reader, "EndMissionDateTime") : null,
+                        AgencyId = DbUtils.GetInt(reader, "AgencyId"),
+                        Agency = new Agency()
+                        {
+                            Id = DbUtils.GetInt(reader, "AgencyId"),
+                            Name = DbUtils.GetString(reader, "AgencyName"),
+                        }
+                    };
+                    assignments.Add(assignment);
+                }
+                reader.Close();
+                return assignments;
+            }
+        }
     }
 
 
 
     public List<Assignment> GetOngoingAssignmentsByUser(int userId)
     {
-        throw new NotImplementedException();
+        using (var conn = Connection)
+        {
+            conn.Open();
+            using (var cmd = conn.CreateCommand())
+            {
+                cmd.CommandText = @"   SELECT  [Assignment].[Id] AS AssignmentId
+                                    ,[Description]
+                                    ,[Fatal]
+                                    ,[StartMissionDateTime]
+                                    ,[EndMissionDateTime]
+	                                ,[User].[AgencyId]
+	                                ,[Agency].Name AS AgencyName 
+									
+                                  FROM [SpyDuh].[dbo].[Assignment]
+                                  LEFT JOIN Agency
+                                  ON Agency.Id = Assignment.AgencyId
+								  LEFT JOIN [UserAssignment]
+								  ON UserAssignment.AssignmentId = Assignment.Id
+								  LEFT JOIN [User]
+								  ON [User].Id = UserAssignment.UserId
+                                  WHERE (EndMissionDateTime > GetDate() OR EndMissionDateTime IS NULL) AND [User].Id = @UserId";
+
+                DbUtils.AddParameter(cmd, "@UserId", userId);
+                var reader = cmd.ExecuteReader();
+
+                var assignments = new List<Assignment>();
+                while (reader.Read())
+                {
+                    var assignment = new Assignment()
+                    {
+                        Id = DbUtils.GetInt(reader, "AssignmentId"),
+                        Description = DbUtils.GetString(reader, "Description"),
+                        Fatal = DbUtils.GetBoolean(reader, "Fatal"),
+                        StartMissionDateTime = DbUtils.GetDateTime(reader, "StartMissionDateTime"),
+                        EndMissionDateTime = DbUtils.IsNotDbNull(reader, "EndMissionDateTime") ? DbUtils.GetDateTime(reader, "EndMissionDateTime") : null,
+                        AgencyId = DbUtils.GetInt(reader, "AgencyId"),
+                        Agency = new Agency()
+                        {
+                            Id = DbUtils.GetInt(reader, "AgencyId"),
+                            Name = DbUtils.GetString(reader, "AgencyName"),
+                        }
+                    };
+                    assignments.Add(assignment);
+                }
+                reader.Close();
+                return assignments;
+            }
+        }
     }
 
     public void Add(Assignment assignment)
