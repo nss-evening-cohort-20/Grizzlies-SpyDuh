@@ -455,6 +455,8 @@ namespace Grizzlies_SpyDuh.Repositories
                     DbUtils.AddParameter(cmd, "@UserId", userService.UserId);
                     DbUtils.AddParameter(cmd, "@ServicePrice", userService.ServicePrice);
                     DbUtils.AddParameter(cmd, "@Id", userService.Id);
+
+                    cmd.ExecuteNonQuery();
                 }
             }
         }
