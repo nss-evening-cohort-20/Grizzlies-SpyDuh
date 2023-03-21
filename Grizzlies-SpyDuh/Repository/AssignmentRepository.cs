@@ -107,6 +107,12 @@ public class AssignmentRepository : BaseRepository, IAssignmentRepository
     public List<Assignment> GetByAgencyId(int agencyId)
     {
         throw new NotImplementedException();
+
+        //In controller, get list of query string paremeters, and split into array.
+        //pass array of Ids here.
+        //with a WHERE IN clause, nothing will break if a bad ID is sent.
+        //use agency list in sql parameter list along with In keyword
+        //return list of results like normal
     }
     public List<Assignment> GetAllOngoingAssignments()
     {
