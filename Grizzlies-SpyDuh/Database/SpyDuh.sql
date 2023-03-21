@@ -77,16 +77,18 @@ GO
 CREATE TABLE [Assignment] (
   [Id] int PRIMARY KEY identity,
   [Description] nvarchar(255) not null,
-  [UserService] int not null,
+  [AgencyId] int not null,
   [Fatal] bit not null,
-  [StartMissionDate] datetime not null,
-  [EndMissionDate] datetime 
+  [StartMissionDateTime] datetime not null,
+  [EndMissionDateTime] datetime 
 )
 GO
 
 CREATE TABLE [UserAssignment] (
   [Id] int PRIMARY KEY identity,
+  [RoleDescription] nvarchar(255) not null,
   [AssignmentId] int not null,
+  [ServiceId] int not null,
   [UserId] int not null
 )
 GO
@@ -118,7 +120,7 @@ GO
 ALTER TABLE [SpyTeam] ADD FOREIGN KEY ([UserId2]) REFERENCES [User] ([Id])
 GO
 
-ALTER TABLE [Assignment] ADD FOREIGN KEY ([UserService]) REFERENCES [UserService] ([Id])
+ALTER TABLE [Assignment] ADD FOREIGN KEY (AgencyId) REFERENCES [Agency] ([Id])
 GO
 
 ALTER TABLE [UserAssignment] ADD FOREIGN KEY ([AssignmentId]) REFERENCES [Assignment] ([Id])
@@ -127,6 +129,8 @@ GO
 ALTER TABLE [UserAssignment] ADD FOREIGN KEY ([UserId]) REFERENCES [User] ([Id])
 GO
 
+ALTER TABLE [UserAssignment] ADD FOREIGN KEY ([ServiceId]) REFERENCES [Service] ([Id])
+GO
 
 --Starter Data for Agency Table
 
@@ -317,3 +321,43 @@ values	(1,2,5)
 		,(22,7,8)
 		,(22,10,10)
 GO
+
+--Insert Starter Data for Assignments Table
+
+INSERT INTO [dbo].[Assignment] 
+			([Description], 
+			 [AgencyId],
+			 [Fatal],
+			 [StartMissionDateTime],
+			 [EndMissionDateTime])
+
+		VALUES
+			('There are rumors of a secret organization that is developing a weapon that turns all dogs into cats. The organization must be infilitrated and the plans and research for this weapon must be destroyed', 1, 1, '2022-12-23T14:25:10.000', '2023-04-12T18:30:00.00'),
+			('A key witness in a murder trial is being harrassed by a group that call themselves ''The Bad Guys''. Discover and expose the group''s leader to save the witness', 2, 0, '2023-03-23T14:25:10.000', null),
+			('A neighborhood villan is stealing everyone''s mail and replacing it with bannanas. Track down the perpetrator and bring them to justice', 3, 1, '2023-03-07T09:30:00.000', null),
+			('An heiress believes her husband has only married her for her fortune and is planning an untimely demise for her. Befriend the husband and discover his true intentions.', 4, 1, '2023-01-11T09:30:00.000', '2023-03-29T09:30:00.000'),
+			('A local charity is embezzling money. Sneak into their office and hack into their financial records to prove it.', 5, 0, '2023-02-11T09:30:00.000', '2023-04-11T09:30:00.000'), 
+			('A suspicious death has occured on a remote billionaire''s island. Go undercover as new staff hires to discover more.', 5, 1, '2023-02-11T09:30:00.000', '2023-05-11T09:30:00.000')
+
+--Insert Starter Data for UserAssignments Table
+
+INSERT INTO [dbo].[UserAssignment]
+			([RoleDescription],
+			 [AssignmentId],
+			 [ServiceId],
+			 [UserId])
+		VALUES
+			('The Team Leader', 1, 1, 1),
+			('The Muscle', 1, 1, 2),
+			('The Hacker', 1,  3, 3),
+			('The Team Leader', 2, 1, 4),
+			('The Researcher', 2, 2, 5),
+			('The Grifter', 2,  1, 6),
+			('The Solo Agent', 3,  1, 7),
+			('The Grifter', 4, 1, 8),
+			('The Backup', 4,  1, 9),
+			('The Hacker', 5, 3, 10),
+			('The Muscle', 5, 1 , 11),
+			('Undercover Agent 1', 6, 2, 12),
+			('Undercover Agent 2', 6, 2, 13),
+			('Undercover Agent 3', 6, 2, 14)
