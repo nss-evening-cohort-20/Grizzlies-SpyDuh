@@ -1,4 +1,4 @@
-﻿using Grizzlies_SpyDuh.Repositories;
+using Grizzlies_SpyDuh.Repositories;
 using Grizzlies_SpyDuh.Models;
 using Grizzlies_SpyDuh.Utils;
 using Microsoft.Data.SqlClient;
@@ -141,8 +141,7 @@ namespace Grizzlies_SpyDuh.Repositories
             }
         }
 
-
-        /*-------------------GetAllUsers()---2-------------------*/
+        /*-------------------GetAllUsers()----------------------*/
         public List<UserInfo> GetAllUsers() //used Model User class: UserInfo
         {
             using (var conn = Connection)
@@ -189,6 +188,7 @@ namespace Grizzlies_SpyDuh.Repositories
                 }
             }
         }
+        /*-------------------GetByIdWithSkillsAndServices()----------------------*/
         public User GetByIdWithSkillsAndServices(int id)
         {
             using (var conn = Connection)
@@ -224,28 +224,29 @@ namespace Grizzlies_SpyDuh.Repositories
                     User user = null;
                     while (reader.Read())
                     {
-                        
+
                         if (user == null)
                         {
-                        user = new User()
-                        {
-                            Id = DbUtils.GetInt(reader, "UserId"),
-                            Name = DbUtils.GetString(reader, "UserName"),
-                            Email = DbUtils.GetString(reader, "Email"),
-                            AgencyId = DbUtils.GetInt(reader, "AgencyId"),
-                            Agency = new Agency()
+                            user = new User()
                             {
-                                Id = DbUtils.GetInt(reader, "AgencyId"),
-                                Name = DbUtils.GetString(reader, "AgencyName")
-                            },
-                            Skills = new List<Skill>(),
-                            Services = new List<Service>()
-                        };
+                                Id = DbUtils.GetInt(reader, "UserId"),
+                                Name = DbUtils.GetString(reader, "UserName"),
+                                Email = DbUtils.GetString(reader, "Email"),
+                                AgencyId = DbUtils.GetInt(reader, "AgencyId"),
+                                Agency = new Agency()
+                                {
+                                    Id = DbUtils.GetInt(reader, "AgencyId"),
+                                    Name = DbUtils.GetString(reader, "AgencyName")
+                                },
+                                Skills = new List<Skill>(),
+                                Services = new List<Service>()
+                            };
                         }
-                        
-                        if (DbUtils.IsNotDbNull(reader, "SkillId")) {
+
+                        if (DbUtils.IsNotDbNull(reader, "SkillId"))
+                        {
                             var skillId = DbUtils.GetInt(reader, "SkillId");
-                        var existingSkill = user.Skills.FirstOrDefault(s => s.Id == skillId);
+                            var existingSkill = user.Skills.FirstOrDefault(s => s.Id == skillId);
                             if (existingSkill == null)
                             {
 
@@ -278,6 +279,48 @@ namespace Grizzlies_SpyDuh.Repositories
             }
         }
 
+        /*-------------------GetEnemies()----------------------*/
+        public List<UserEnemy> GetEnemies(string userName) //Tom Bishop
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                                    SELECT Name, Email
+                                    FROM [User] 
+                                    WHERE [User].Id IN (
+                                            SELECT DISTINCT[SpyEnemy].UserId2
+                                            FROM [User]   
+                                            INNER JOIN [SpyEnemy] 
+                                            ON  [User].Id = [SpyEnemy].UserId1
+                                            WHERE [User].Name= @Name )";
+
+                    DbUtils.AddParameter(cmd, "Name", userName);
+
+                    var reader = cmd.ExecuteReader();
+
+                    var users = new List<UserEnemy>();
+                    while (reader.Read())
+                    {
+                        var user = new UserEnemy()
+                        {
+                            Name = DbUtils.GetString(reader, "Name"),
+                            Email = DbUtils.GetString(reader, "Email"),
+
+                        };
+
+                        users.Add(user);
+                    }
+                    reader.Close();
+
+                    return users;
+
+                }
+            }
+        }
+        /*-------------------Add()----------------------*/
         public void Add(User user)
         {
             using (var conn = Connection)
@@ -299,10 +342,103 @@ namespace Grizzlies_SpyDuh.Repositories
                 }
             }
         }
-        /*------------------------------------------------------------------------*/
 
-        /*--------------------------------------*/
-        /*-------------------GetSkillCounr()---2-------------------*/
+        /*-------------------GetNonHandlerByAgencyId()----------------------*/
+        public List<User> GetNonHandlerByAgencyId(int agencyId)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"SELECT
+	                                        u.Id,
+	                                        u.Name,
+	                                        Email,
+	                                        Agency.Id as AgencyId,
+	                                        Agency.Name as Agency,
+	                                        IsHandler,
+                                            Skill.Id as SkillId,
+	                                        Skill.Name as SkillName,
+	                                        SkillLevel,
+                                            Service.Id as ServiceId,
+	                                        Service.Name as ServiceName,
+	                                        ServicePrice
+                                        FROM [User] u
+                                        JOIN Agency
+	                                        ON u.AgencyId = Agency.Id
+                                        LEFT JOIN UserSkill
+	                                        ON u.Id = UserSkill.UserId
+                                        LEFT JOIN Skill
+	                                        ON UserSkill.SkillId = Skill.Id
+                                        LEFT JOIN UserService
+	                                        ON u.Id = UserService.UserId
+                                        LEFT JOIN [Service]
+	                                        ON UserService.ServiceId = Service.Id
+                                        WHERE AgencyId = @AgencyId AND IsHandler = 0";
+
+                    DbUtils.AddParameter(cmd, "@AgencyId", agencyId);
+
+                    var reader = cmd.ExecuteReader();
+
+                    var users = new List<User>();
+
+                    while (reader.Read())
+                    {
+                        var userId = DbUtils.GetInt(reader, "Id");
+                        var existingUser = users.FirstOrDefault(u => u.Id == userId);
+                        if (existingUser == null)
+                        {
+                            existingUser = new User()
+                            {
+                                Id = userId,
+                                Name = DbUtils.GetString(reader, "Name"),
+                                Email = DbUtils.GetString(reader, "Email"),
+                                AgencyId = agencyId,
+                                Agency = new Agency()
+                                {
+                                    Id = agencyId,
+                                    Name = DbUtils.GetString(reader, "Agency")
+                                },
+                                IsHandler = DbUtils.GetBoolean(reader, "IsHandler"),
+                                Skills = new List<Skill>(),
+                                Services = new List<Service>()
+                            };
+
+                            users.Add(existingUser);
+                        }
+
+                        var skillId = DbUtils.GetInt(reader, "SkillId");
+                        var existingSkill = existingUser.Skills.FirstOrDefault(s => s.Id == skillId);
+                        if (existingSkill == null)
+                        {
+                            existingUser.Skills.Add(new Skill()
+                            {
+                                Id = skillId,
+                                Name = DbUtils.GetString(reader, "SkillName"),
+                                Level = DbUtils.GetInt(reader, "SkillLevel"),
+                            });
+                        }
+
+                        var serviceId = DbUtils.GetInt(reader, "ServiceId");
+                        var existingService = existingUser.Services.FirstOrDefault(s => s.Id == serviceId);
+                        if (existingService == null)
+                        {
+                            existingUser.Services.Add(new Service()
+                            {
+                                Id = serviceId,
+                                Name = DbUtils.GetString(reader, "ServiceName"),
+                                Price = DbUtils.GetDouble(reader, "ServicePrice"),
+                            });
+                        }
+                    }
+
+                    reader.Close();
+                    return users;
+                }
+            }
+        }
+        /*-------------------GetSkillCounr()----------------------*/
         public SkillCount GetSkillCounr(string SkillName) //used Model User class: UserInfo
         {
             using (var conn = Connection)
@@ -341,8 +477,6 @@ namespace Grizzlies_SpyDuh.Repositories
 
             }
         }
-
-
 
     }
 }

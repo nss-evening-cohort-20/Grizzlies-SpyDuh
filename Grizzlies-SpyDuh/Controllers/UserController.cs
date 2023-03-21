@@ -47,6 +47,12 @@ public class UserController : ControllerBase
     }
     /*---------------------------------------------*/
 
+    [HttpGet("GetUserEnemies/{userName}")]//Taco
+    public IActionResult Get_Enemies(string userName)//Taco
+    {
+        //return Ok(_userRepository.GetBySkill_1(skillName));
+        return Ok(_userRepository.GetEnemies(userName));
+    /*---------------------------------------------*/
     [HttpPost]
     public IActionResult Post(User user)
     {
@@ -54,13 +60,19 @@ public class UserController : ControllerBase
         return Created("", user);
     }
 
-
     /*---------------------------------------------*/
 
     [HttpGet("GetSkillCounr/{SkillName}")]
     public IActionResult CounSkill(string SkillName)
     {
         return Ok(_userRepository.GetSkillCounr(SkillName));
+
+
+    [HttpGet("GetByAgency")]
+    public IActionResult GetNonHandlerByAgencyId(int agencyId)
+    {
+        var users = _userRepository.GetNonHandlerByAgencyId(agencyId);
+        return Ok(users);
 
     }
 }
