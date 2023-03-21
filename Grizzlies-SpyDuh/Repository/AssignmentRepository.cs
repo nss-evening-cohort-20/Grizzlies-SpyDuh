@@ -5,7 +5,7 @@ using System.Security.Cryptography;
 
 namespace Grizzlies_SpyDuh.Repository;
 
-public class AssignmentRepository : BaseRepository
+public class AssignmentRepository : BaseRepository, IAssignmentRepository
 {
     public AssignmentRepository(IConfiguration configuration) : base(configuration) { }
 
@@ -18,68 +18,81 @@ public class AssignmentRepository : BaseRepository
             conn.Open();
             using (var cmd = conn.CreateCommand())
             {
-                cmd.CommandText = @" SELECT
-        [User].Id AS UserId,
-        [User].Name As UserName, 
-        [User].Email, 
-        [User].AgencyId, 
-        UserSkill.Id, 
-        UserSkill.UserId,
-        UserSkill.SkillLevel,
-        Skill.Id,
-        Skill.Name As SkillName
-        FROM [User] 
-        INNER JOIN UserSkill ON UserSkill.UserId = [User].Id
-        INNER JOIN Skill ON Skill.Id = UserSkill.SkillId
-        WHERE Skill.Name= @Name";
+                cmd.CommandText = @" SELECT  [Assignment].[Id] AS AssignmentId
+                                    ,[Description]
+                                    ,[Fatal]
+                                    ,[StartMissionDateTime]
+                                    ,[EndMissionDateTime]
+	                                ,[AgencyId]
+	                                ,[Agency].Name AS AgencyName 
+                                  FROM [SpyDuh].[dbo].[Assignment]
+                                  LEFT JOIN Agency
+                                  ON Agency.Id = Assignment.AgencyId";
 
 
-            var reader = cmd.ExecuteReader();
+                var reader = cmd.ExecuteReader();
 
                 var assignments = new List<Assignment>();
                 while (reader.Read())
                 {
-
+                    var assignment = new Assignment()
+                    {
+                        Id = DbUtils.GetInt(reader, "AssignmentId"),
+                        Description = DbUtils.GetString(reader, "Description"),
+                        Fatal = DbUtils.GetBoolean(reader, "Fatal"),
+                        StartMissionDateTime = DbUtils.GetDateTime(reader, "StartMissionDateTime"),
+                        EndMissionDateTime = DbUtils.IsNotDbNull(reader, "EndMissionDateTime") ? DbUtils.GetDateTime(reader, "EndMissionDateTime") : null,
+                        AgencyId = DbUtils.GetInt(reader, "AgencyId"),
+                        Agency = new Agency()
+                        {
+                            Id = DbUtils.GetInt(reader, "AgencyId"),
+                            Name = DbUtils.GetString(reader, "AgencyName"),
+                        }
+                    };
+                    assignments.Add(assignment);
                 }
+                reader.Close();
+                return assignments;
             }
-            
+        }
+    }
 
     public Assignment GetById(int id)
     {
-
+        throw new NotImplementedException();
     }
     public List<Assignment> GetByAgencyId(int agencyId)
     {
-
+        throw new NotImplementedException();
     }
     public List<Assignment> GetAllOngoingAssignments()
     {
-
+        throw new NotImplementedException();
     }
     public List<Assignment> GetOngoingAssignmentsByAgency(int userId)
     {
-
+        throw new NotImplementedException();
     }
 
 
 
     public List<Assignment> GetOngoingAssignmentsByUser(int userId)
     {
-
+        throw new NotImplementedException();
     }
 
     public void Add(Assignment assignment)
     {
-
+        throw new NotImplementedException();
     }
 
     public void Update(int id, Assignment assignment)
     {
-
+        throw new NotImplementedException();
     }
 
     public void Delete(int id)
     {
-
+        throw new NotImplementedException();
     }
 }
