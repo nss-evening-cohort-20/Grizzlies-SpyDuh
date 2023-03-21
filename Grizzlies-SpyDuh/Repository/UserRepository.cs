@@ -468,19 +468,32 @@ namespace Grizzlies_SpyDuh.Repositories
                 conn.Open();
                 using (var cmd = conn.CreateCommand())
                 {
-
+                    cmd.CommandText = "DELETE FROM UserService WHERE Id = @Id";
+                    DbUtils.AddParameter(cmd, "@Id", id);
+                    cmd.ExecuteNonQuery();
                 }
             }
         }
 
-        public void UpdateUserSkill(int id)
+        public void UpdateUserSkill(UserSkill userSkill)
         {
             using (var conn = Connection)
             {
                 conn.Open();
                 using (var cmd = conn.CreateCommand())
                 {
+                    cmd.CommandText = @"UPDATE UserSkill
+	                                        SET SkillId = @SkillId,
+		                                        UserId = @UserId,
+		                                        SkillLevel = @SkillLevel
+                                        WHERE Id = @Id;";
 
+                    DbUtils.AddParameter(cmd, "@SkillId", userSkill.SkillId);
+                    DbUtils.AddParameter(cmd, "@UserId", userSkill.UserId);
+                    DbUtils.AddParameter(cmd, "@SkillLevel", userSkill.SkillLevel);
+                    DbUtils.AddParameter(cmd, "@Id", userSkill.Id);
+
+                    cmd.ExecuteNonQuery();
                 }
             }
         }
@@ -492,7 +505,9 @@ namespace Grizzlies_SpyDuh.Repositories
                 conn.Open();
                 using (var cmd = conn.CreateCommand())
                 {
-
+                    cmd.CommandText = "DELETE FROM UserSkill WHERE Id = @Id";
+                    DbUtils.AddParameter(cmd, "@Id", id);
+                    cmd.ExecuteNonQuery();
                 }
             }
         }
