@@ -11,4 +11,8 @@ public interface IUserRepository
     List<UserEnemy> GetEnemies(string userName);
     public void Add(User user);
     public List<User> GetNonHandlerByAgencyId(int agencyId);
+    public void UpdateUserService(UserService userService);
+    public void DeleteUserService(int id);
+    public void UpdateUserSkill(UserSkill userSkill);
+    public void DeleteUserSkill(int id);
 }

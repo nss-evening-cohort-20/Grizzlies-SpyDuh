@@ -437,5 +437,79 @@ namespace Grizzlies_SpyDuh.Repositories
                 }
             }
         }
+
+        public void UpdateUserService(UserService userService)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"UPDATE UserService
+	                                        SET ServiceId = @ServiceId,
+		                                        UserId = @UserId,
+		                                        ServicePrice = @ServicePrice
+                                        WHERE Id = @Id;";
+
+                    DbUtils.AddParameter(cmd, "@ServiceId", userService.ServiceId);
+                    DbUtils.AddParameter(cmd, "@UserId", userService.UserId);
+                    DbUtils.AddParameter(cmd, "@ServicePrice", userService.ServicePrice);
+                    DbUtils.AddParameter(cmd, "@Id", userService.Id);
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public void DeleteUserService(int id)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = "DELETE FROM UserService WHERE Id = @Id";
+                    DbUtils.AddParameter(cmd, "@Id", id);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public void UpdateUserSkill(UserSkill userSkill)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"UPDATE UserSkill
+	                                        SET SkillId = @SkillId,
+		                                        UserId = @UserId,
+		                                        SkillLevel = @SkillLevel
+                                        WHERE Id = @Id;";
+
+                    DbUtils.AddParameter(cmd, "@SkillId", userSkill.SkillId);
+                    DbUtils.AddParameter(cmd, "@UserId", userSkill.UserId);
+                    DbUtils.AddParameter(cmd, "@SkillLevel", userSkill.SkillLevel);
+                    DbUtils.AddParameter(cmd, "@Id", userSkill.Id);
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public void DeleteUserSkill(int id)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = "DELETE FROM UserSkill WHERE Id = @Id";
+                    DbUtils.AddParameter(cmd, "@Id", id);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
     }
 }

@@ -52,6 +52,7 @@ public class UserController : ControllerBase
     {
         //return Ok(_userRepository.GetBySkill_1(skillName));
         return Ok(_userRepository.GetEnemies(userName));
+    }
     /*---------------------------------------------*/
     [HttpPost]
     public IActionResult Post(User user)
@@ -65,6 +66,44 @@ public class UserController : ControllerBase
     {
         var users = _userRepository.GetNonHandlerByAgencyId(agencyId);
         return Ok(users);
+    }
+
+    [HttpPut("UserService/{id}")]
+    public IActionResult UpdateUserService(int id, UserService userService)
+    {
+        if (id != userService.Id)
+        {
+            return BadRequest();
+        }
+
+        _userRepository.UpdateUserService(userService);
+        return NoContent();
+    }
+
+    [HttpDelete("UserService")]
+    public IActionResult DeleteUserService(int id)
+    {
+        _userRepository.DeleteUserService(id);
+        return NoContent();
+    }
+
+    [HttpPut("UserSkill/{id}")]
+    public IActionResult UpdateUserSkill(int id, UserSkill userSkill)
+    {
+        if (id != userSkill.Id)
+        {
+            return BadRequest();
+        }
+
+        _userRepository.UpdateUserSkill(userSkill);
+        return NoContent();
+    }
+
+    [HttpDelete("UserSkill")]
+    public IActionResult DeleteUserSkill(int id)
+    {
+        _userRepository.DeleteUserSkill(id);
+        return NoContent();
     }
 }
 
