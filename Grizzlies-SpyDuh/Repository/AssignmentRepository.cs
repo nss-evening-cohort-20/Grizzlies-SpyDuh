@@ -59,7 +59,50 @@ public class AssignmentRepository : BaseRepository, IAssignmentRepository
 
     public Assignment GetById(int id)
     {
-        throw new NotImplementedException();
+        using (var conn = Connection)
+        {
+            conn.Open();
+            using (var cmd = conn.CreateCommand())
+            {
+                cmd.CommandText = @" SELECT  [Assignment].[Id] AS AssignmentId
+                                    ,[Description]
+                                    ,[Fatal]
+                                    ,[StartMissionDateTime]
+                                    ,[EndMissionDateTime]
+	                                ,[AgencyId]
+	                                ,[Agency].Name AS AgencyName 
+                                  FROM [SpyDuh].[dbo].[Assignment]
+                                  LEFT JOIN Agency
+                                  ON Agency.Id = Assignment.AgencyId
+                                  WHERE Assignment.Id = @Id";
+                DbUtils.AddParameter(cmd, "@Id", id);
+
+
+                var reader = cmd.ExecuteReader();
+
+                Assignment assignment = null;
+                if (reader.Read())
+                {
+                    assignment = new Assignment()
+                    {
+                        Id = DbUtils.GetInt(reader, "AssignmentId"),
+                        Description = DbUtils.GetString(reader, "Description"),
+                        Fatal = DbUtils.GetBoolean(reader, "Fatal"),
+                        StartMissionDateTime = DbUtils.GetDateTime(reader, "StartMissionDateTime"),
+                        EndMissionDateTime = DbUtils.IsNotDbNull(reader, "EndMissionDateTime") ? DbUtils.GetDateTime(reader, "EndMissionDateTime") : null,
+                        AgencyId = DbUtils.GetInt(reader, "AgencyId"),
+                        Agency = new Agency()
+                        {
+                            Id = DbUtils.GetInt(reader, "AgencyId"),
+                            Name = DbUtils.GetString(reader, "AgencyName"),
+                        }
+                    };
+                    
+                }
+                reader.Close();
+                return assignment;
+            }
+        }
     }
     public List<Assignment> GetByAgencyId(int agencyId)
     {

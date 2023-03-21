@@ -18,7 +18,18 @@ namespace Grizzlies_SpyDuh.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            return Ok(_assignmentRepository.GetAll());
+            var assignments = _assignmentRepository.GetAll();
+            if (assignments !=null) return Ok(assignments);
+            return BadRequest();
         }
+
+        [HttpGet("{id}")]
+        public IActionResult GetById(int id)
+        {
+            var assignment = _assignmentRepository.GetById(id);
+            if (assignment != null) return Ok(assignment);
+            return BadRequest();
+        }
+
     }
 }
