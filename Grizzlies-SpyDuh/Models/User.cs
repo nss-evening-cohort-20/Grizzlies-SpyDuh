@@ -27,8 +27,8 @@
     public class SkillCount
     {
         public string SkillName { get; set; }
-        public int  CountSkill { get; set; }
-
+        public int CountSkill { get; set; }
+    }
 
     public class UserEnemy 
     {
@@ -37,6 +37,7 @@
 
     }
 }
+
 
 
 

@@ -11,6 +11,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddTransient<IUserRepository, UserRepository>();
 builder.Services.AddTransient<IAgencyRepository, AgencyRepository>();
+builder.Services.AddTransient<ISkillRepository, SkillRepository>();
 
 var app = builder.Build();
 

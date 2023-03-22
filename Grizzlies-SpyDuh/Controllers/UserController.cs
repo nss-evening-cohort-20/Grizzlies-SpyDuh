@@ -67,7 +67,7 @@ public class UserController : ControllerBase
     public IActionResult CounSkill(string SkillName)
     {
         return Ok(_userRepository.GetSkillCounr(SkillName));
-
+    }
 
     [HttpGet("GetByAgency")]
     public IActionResult GetNonHandlerByAgencyId(int agencyId)
