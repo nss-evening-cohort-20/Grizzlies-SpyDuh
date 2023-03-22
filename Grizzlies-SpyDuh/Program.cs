@@ -10,6 +10,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddTransient<IUserRepository, UserRepository>();
+builder.Services.AddTransient<IAgencyRepository, AgencyRepository>();
+builder.Services.AddTransient<ISkillRepository, SkillRepository>();
 builder.Services.AddTransient<IAssignmentRepository, AssignmentRepository>();
 
 var app = builder.Build();
