@@ -1,6 +1,7 @@
 ﻿using Grizzlies_SpyDuh.Models;
 using Grizzlies_SpyDuh.Repositories;
 using Grizzlies_SpyDuh.Utils;
+using Microsoft.Extensions.Hosting;
 using System.Security.Cryptography;
 
 namespace Grizzlies_SpyDuh.Repository;
@@ -308,16 +309,70 @@ public class AssignmentRepository : BaseRepository, IAssignmentRepository
 
     public void Add(Assignment assignment)
     {
-        throw new NotImplementedException();
+        using (var conn = Connection)
+        {
+            conn.Open();
+            using (var cmd = conn.CreateCommand())
+            {
+                cmd.CommandText = @"INSERT INTO [dbo].[Assignment]
+                                    ([Description]
+                                    ,[AgencyId]
+                                    ,[Fatal]
+                                    ,[StartMissionDateTime]
+                                    ,[EndMissionDateTime])
+                                    OUTPUT INSERTED.ID
+                                VALUES
+                                    (@Description, @AgencyId, @Fatal, @StartMissionDateTime, @EndMissionDateTime)";
+
+                DbUtils.AddParameter(cmd, "@Description", assignment.Description);
+                DbUtils.AddParameter(cmd, "@AgencyId", assignment.AgencyId);
+                DbUtils.AddParameter(cmd, "@Fatal", assignment.Fatal);
+                DbUtils.AddParameter(cmd, "@StartMissionDateTime", assignment.StartMissionDateTime);
+                DbUtils.AddParameter(cmd, "@EndMissionDateTime", assignment.EndMissionDateTime);
+
+                assignment.Id = (int)cmd.ExecuteScalar();
+            }
+        }
     }
 
     public void Update(int id, Assignment assignment)
     {
-        throw new NotImplementedException();
+        using (var conn = Connection)
+        {
+            conn.Open();
+            using (var cmd = conn.CreateCommand())
+            {
+                cmd.CommandText = @"
+                        UPDATE Assignment
+                           SET [Description] = @Description,
+                               [AgencyId] = @AgencyId,
+                               [Fatal] = @Fatal,
+                               [StartMissionDateTime] = @StartMissionDateTime,
+                               [EndMissionDateTime] = @EndMissionDateTime
+                         WHERE Id = @Id";
+                DbUtils.AddParameter(cmd, "@Id", id);
+                DbUtils.AddParameter(cmd, "@Description", assignment.Description);
+                DbUtils.AddParameter(cmd, "@AgencyId", assignment.AgencyId);
+                DbUtils.AddParameter(cmd, "@Fatal", assignment.Fatal);
+                DbUtils.AddParameter(cmd, "@StartMissionDateTime", assignment.StartMissionDateTime);
+                DbUtils.AddParameter(cmd, "@EndMissionDateTime", assignment.EndMissionDateTime);
+
+                cmd.ExecuteNonQuery();
+            }
+        }
     }
 
     public void Delete(int id)
     {
-        throw new NotImplementedException();
+        using (var conn = Connection)
+        {
+            conn.Open();
+            using (var cmd = conn.CreateCommand())
+            {
+                cmd.CommandText = "DELETE FROM Assignment WHERE Id = @Id";
+                DbUtils.AddParameter(cmd, "@Id", id);
+                cmd.ExecuteNonQuery();
+            }
+        }
     }
 }

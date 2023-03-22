@@ -1,4 +1,5 @@
-﻿using Grizzlies_SpyDuh.Repository;
+﻿using Grizzlies_SpyDuh.Models;
+using Grizzlies_SpyDuh.Repository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -67,5 +68,25 @@ namespace Grizzlies_SpyDuh.Controllers
             return BadRequest();
         }
 
+        [HttpPost]
+        public IActionResult Post(Assignment assignment)
+        {
+            _assignmentRepository.Add(assignment);
+            return NoContent();
+        }
+
+        [HttpPut("{id}")]
+        public IActionResult Put(int id, Assignment assignment)
+        {
+            _assignmentRepository.Update(id, assignment);
+            return NoContent();
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult Delete(int id)
+        {
+            _assignmentRepository.Delete(id);
+            return NoContent();
+        }
     }
 }
