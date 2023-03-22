@@ -553,6 +553,52 @@ namespace Grizzlies_SpyDuh.Repositories
         }
 
 
+
+        /*------------------------ GetFriend -----------------------*/
+
+        public List<UserFriend> GetUserFriends(string name)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand()) 
+                {
+                    cmd.CommandText = @"
+                                    SELECT Name, Email
+                                    FROM [User] 
+                                    WHERE [User].Id IN (
+                                            SELECT DISTINCT[SpyTeam].UserId2
+                                            FROM [User]   
+                                            INNER JOIN [SpyTeam] 
+                                            ON  [User].Id = [SpyTeam].UserId1
+                                            WHERE [User].Name= @Name )";
+                    
+                    DbUtils.AddParameter(cmd , "Name", name);
+
+                    var reader = cmd.ExecuteReader();
+
+                    var users = new List<UserFriend>();
+
+                    while (reader.Read())
+                    {
+                        var user = new UserFriend()
+                        {
+                            Name = DbUtils.GetString(reader, "Name"), 
+                            Email = DbUtils.GetString(reader, "Email"),
+                        };
+
+                        users.Add(user);
+
+                    }
+
+                    reader.Close();
+
+                    return users;
+
+                }
+            }
+        }
+
     }
 }
 

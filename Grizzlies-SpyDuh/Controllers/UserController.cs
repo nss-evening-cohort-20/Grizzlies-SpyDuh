@@ -67,6 +67,7 @@ public class UserController : ControllerBase
     public IActionResult CounSkill(string SkillName)
     {
         return Ok(_userRepository.GetSkillCounr(SkillName));
+    }
 
 
     [HttpGet("GetByAgency")]
@@ -114,6 +115,16 @@ public class UserController : ControllerBase
         _userRepository.DeleteUserSkill(id);
         return NoContent();
     }
+
+
+    /*---------------------------------------------*/
+
+    [HttpGet("GetUserFriends/{name}")]
+    public IActionResult Get_Friends(string name)
+    {
+        return Ok(_userRepository.GetUserFriends(name));
+    }
+
 }
 
 
