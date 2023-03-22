@@ -134,5 +134,10 @@ namespace Grizzlies_SpyDuh.Utils
                 cmd.Parameters.AddWithValue(name, value);
             }
         }
+
+        public static void AddParameterList(SqlCommand cmd, string name, List<int> ints)
+        {
+            cmd.Parameters.Add(new SqlParameter(name, ints));
+        }
     }
 }
