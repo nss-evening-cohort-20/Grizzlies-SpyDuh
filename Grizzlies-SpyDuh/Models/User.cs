@@ -16,6 +16,14 @@
 
     }
 
+    public class UserBasic
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string Email { get; set; }
+        public bool IsHandler { get; set; }
+    }
+
     public class UserInfo //concise User properties
     {
         public int Id { get; set; }
@@ -27,8 +35,8 @@
     public class SkillCount
     {
         public string SkillName { get; set; }
-        public int  CountSkill { get; set; }
-
+        public int CountSkill { get; set; }
+    }
 
     public class UserEnemy 
     {

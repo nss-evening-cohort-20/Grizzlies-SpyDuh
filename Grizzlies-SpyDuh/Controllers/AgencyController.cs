@@ -15,10 +15,10 @@ namespace Grizzlies_SpyDuh.Controllers
             _agencyRepository = agencyRepository;
         }
 
-        [HttpGet("AgenciesAvgSkillLevel")]
-        public IActionResult GetAllAvgSkill()
+        [HttpGet("GetAll")]
+        public IActionResult GetAll()
         {
-            return Ok(_agencyRepository.GetAllAvgSkill());
+            return Ok(_agencyRepository.GetAll());
         }
     }
 }

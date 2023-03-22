@@ -4,7 +4,8 @@
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public User? Handler { get; set; }
-        public double? AvgSkillLevel { get; set; }
+        public List<int>? SkillLevels { get; set; }
+        public double? AvgSkillLevel => (double)SkillLevels?.Sum() / (double)SkillLevels.Count();
+        public List<UserBasic> Members { get; set; }
     }
 }
