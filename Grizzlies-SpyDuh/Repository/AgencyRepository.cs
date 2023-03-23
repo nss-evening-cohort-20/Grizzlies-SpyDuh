@@ -63,7 +63,7 @@ public class AgencyRepository : BaseRepository, IAgencyRepository
                             Id = userId,
                             Name = DbUtils.GetString(reader, "UserName"),
                             Email = DbUtils.GetString(reader, "UserEmail"),
-                            IsHandler = DbUtils.GetBoolean(reader, "IsHandler")
+                            IsHandler = DbUtils.GetNullableBoolean(reader, "IsHandler")
                         });
                     }
 

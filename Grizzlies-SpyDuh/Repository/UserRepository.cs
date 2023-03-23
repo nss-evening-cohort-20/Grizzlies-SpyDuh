@@ -438,7 +438,7 @@ namespace Grizzlies_SpyDuh.Repositories
                                     Id = agencyId,
                                     Name = DbUtils.GetString(reader, "Agency")
                                 },
-                                IsHandler = DbUtils.GetBoolean(reader, "IsHandler"),
+                                IsHandler = DbUtils.GetNullableBoolean(reader, "IsHandler"),
                                 Skills = new List<Skill>(),
                                 Services = new List<Service>()
                             };
@@ -548,6 +548,42 @@ namespace Grizzlies_SpyDuh.Repositories
                     cmd.CommandText = "DELETE FROM UserSkill WHERE Id = @Id";
                     DbUtils.AddParameter(cmd, "@Id", id);
                     cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public List<UserBasic> SearchName(string criterion)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"SELECT
+                                            u.Id,
+                                            u.Name, 
+                                            u.Email, 
+                                            u.IsHandler
+                                        FROM [User] u
+                                        WHERE u.Name LIKE @Criterion";
+
+                    DbUtils.AddParameter(cmd, "@Criterion", $"%{criterion}%");
+                    var reader = cmd.ExecuteReader();
+
+                    var users = new List<UserBasic>();
+                    while (reader.Read())
+                    {
+                        users.Add(new UserBasic()
+                        {
+                            Id = DbUtils.GetInt(reader, "Id"),
+                            Name = DbUtils.GetString(reader, "Name"),
+                            Email = DbUtils.GetString(reader, "Email"),
+                            IsHandler = DbUtils.GetNullableBoolean(reader, "IsHandler")
+                        });
+                    }
+
+                    reader.Close();
+                    return users;
                 }
             }
         }
