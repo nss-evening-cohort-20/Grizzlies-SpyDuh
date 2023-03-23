@@ -188,6 +188,86 @@ namespace Grizzlies_SpyDuh.Repositories
                 }
             }
         }
+
+        /*-------------------GetAllUsersPaginated()----------------------*/
+
+        public (List<UserInfo>, int)  GetAllUsersPaginatedWithSkills(int offset, int limit) //used Model User class: UserInfo
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @" --Get count of all users
+                                            WITH CountAllUsers AS (
+                                            SELECT COUNT(Distinct [User].Id) AS CountUsers FROM [USER]
+                                            ),
+                                            --get paginated table of Users
+                                            user_table AS (
+                                            SELECT 
+                                            [User].Id,
+                                             [User].Name As UserName, 
+                                             [User].Email 
+                                            FROM [User]
+                                            ORDER BY [User].Id
+                                            OFFSET @Offset ROWS
+                                            FETCH FIRST @Limit ROWS ONLY)
+
+                                            --use User paginated table and count table, then join skills and userSkills,
+                                            SELECT
+                                                    user_table.Id AS UserId,
+		                                            user_table.UserName,
+		                                            user_table.Email,
+                                                    Skill.Name As SkillName,
+                                                    Skill.Id AS SkillId,
+		                                            CountUsers
+                                                    FROM CountAllUsers, user_table
+                                                    INNER JOIN UserSkill ON UserSkill.UserId = user_table.Id
+                                                    INNER JOIN Skill ON Skill.Id = UserSkill.SkillId
+		                                            ORDER BY user_table.Id";
+
+                    DbUtils.AddParameter(cmd, "@Offset", offset);
+                    DbUtils.AddParameter(cmd, "@Limit", limit);
+
+                    var reader = cmd.ExecuteReader();
+
+                    var users = new List<UserInfo>();
+                    int quantity = 0;
+                    while (reader.Read())
+                    {
+                        var userId = DbUtils.GetInt(reader, "UserId");
+                        var existingUser = users.FirstOrDefault(u => u.Id == userId);
+
+                        if (existingUser == null) 
+                        {
+                        existingUser = new UserInfo()
+                        {
+                            Id = DbUtils.GetInt(reader, "UserId"),
+                            Name = DbUtils.GetString(reader, "UserName"),
+                            Email = DbUtils.GetString(reader, "Email"),
+                            Skills = new List<Skill>()
+                        };
+
+                        }
+                        if (DbUtils.IsNotDbNull(reader, "CountUsers") && quantity == 0) quantity = DbUtils.GetInt(reader, "CountUsers");
+                        if (DbUtils.IsNotDbNull(reader, "UserName"))
+                        {
+                            var skillNamex = DbUtils.GetString(reader, "SkillName");
+                            existingUser.Skills.Add(new Skill()
+                            {
+                                Id = DbUtils.GetInt(reader, "SkillId"),
+                                Name = skillNamex //skillName
+                            });
+                        };
+                        users.Add(existingUser);
+                    }
+                    reader.Close();
+
+                    return (users, quantity);
+                }
+            }
+        }
+
         /*-------------------GetByIdWithSkillsAndServices()----------------------*/
         public User GetByIdWithSkillsAndServices(int id)
         {
