@@ -75,7 +75,6 @@ public class UserController : ControllerBase
     {
         var users = _userRepository.GetNonHandlerByAgencyId(agencyId);
         return Ok(users);
-
     }
 
     [HttpPut("UserService/{id}")]

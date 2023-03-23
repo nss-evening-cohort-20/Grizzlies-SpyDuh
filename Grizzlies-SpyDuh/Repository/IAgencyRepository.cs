@@ -4,6 +4,6 @@ namespace Grizzlies_SpyDuh.Repository
 {
     public interface IAgencyRepository
     {
-        List<Agency> GetAllAvgSkill();
+        List <Agency> GetAll();
     }
 }
