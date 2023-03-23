@@ -1,4 +1,4 @@
-﻿using Grizzlies_SpyDuh.Models;
+using Grizzlies_SpyDuh.Models;
 using Grizzlies_SpyDuh.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -63,6 +63,15 @@ public class UserController : ControllerBase
         return Created("", user);
     }
 
+    /*---------------------------------------------*/
+
+    [HttpGet("GetSkillCounr/{SkillName}")]
+    public IActionResult CounSkill(string SkillName)
+    {
+        return Ok(_userRepository.GetSkillCounr(SkillName));
+    }
+
+
     [HttpGet("GetByAgency")]
     public IActionResult GetNonHandlerByAgencyId(int agencyId)
     {
@@ -108,6 +117,7 @@ public class UserController : ControllerBase
         return NoContent();
     }
 
+
     [HttpPut("UserUpdate1/{id}")]
     public IActionResult UpdateUser(int id, UserUD UserUD)
     {
@@ -143,6 +153,15 @@ public class UserController : ControllerBase
         _userRepository.DeleteUser(id);
         return NoContent();
     }
+
+    /*---------------------------------------------*/
+
+    [HttpGet("GetUserFriends/{name}")]
+    public IActionResult Get_Friends(string name)
+    {
+        return Ok(_userRepository.GetUserFriends(name));
+    }
+
 }
 
 

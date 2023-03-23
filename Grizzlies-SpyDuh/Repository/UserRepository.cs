@@ -84,7 +84,7 @@ namespace Grizzlies_SpyDuh.Repositories
             }
         }
 
-        /*-------------------GetBySkill()---2-------------------*/
+        /*-------------------GetSkillCounr()---2-------------------*/
         public List<UserInfo> GetBySkill_2(string SkillName) //used Model User class: UserInfo
         {
             using (var conn = Connection)
@@ -343,7 +343,46 @@ namespace Grizzlies_SpyDuh.Repositories
                 }
             }
         }
+        /*-------------------GetSkillCounr()---2-------------------*/
+        public SkillCount GetSkillCounr(string SkillName) //used Model User class: UserInfo
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"         
+        SELECT count(*) as CountSkill, 
+        Skill.Name As SkillName
+        FROM [User] 
+        INNER JOIN UserSkill ON UserSkill.UserId = [User].Id
+        INNER JOIN Skill ON Skill.Id = UserSkill.SkillId
+        WHERE Skill.Name= @Name
+        Group by  Skill.Name";
 
+                    DbUtils.AddParameter(cmd, "@Name", SkillName);
+
+                    var reader = cmd.ExecuteReader();
+
+                    var counts = new SkillCount();
+                    while (reader.Read())
+                    { 
+                         counts = new SkillCount()
+                        {
+                            SkillName = SkillName,
+                            CountSkill = DbUtils.GetInt(reader, "CountSkill"),
+                        };
+
+
+                    }
+                    reader.Close();
+
+                     return counts;
+                }
+
+            }
+        }
+        /*-------------------GetNonHandlerByAgencyId()----------------------*/
         public List<User> GetNonHandlerByAgencyId(int agencyId)
         {
             using (var conn = Connection)
@@ -439,6 +478,7 @@ namespace Grizzlies_SpyDuh.Repositories
             }
         }
 
+        /*-----------------------------------------------*/
         public void UpdateUserService(UserService userService)
         {
             using (var conn = Connection)
@@ -461,7 +501,8 @@ namespace Grizzlies_SpyDuh.Repositories
                 }
             }
         }
-
+        
+        /*-----------------------------------------------*/
         public void DeleteUserService(int id)
         {
             using (var conn = Connection)
@@ -475,8 +516,8 @@ namespace Grizzlies_SpyDuh.Repositories
                 }
             }
         }
-        /*-------------------------------UpdateUserSkill()-------------------------------------*/
 
+        /*-------------------------------UpdateUserSkill()-------------------------------------*/
         public void UpdateUserSkill(UserSkill userSkill)
         {
             using (var conn = Connection)
@@ -499,7 +540,7 @@ namespace Grizzlies_SpyDuh.Repositories
                 }
             }
         }
-
+        /*-----------------------------------------------*/
         public void DeleteUserSkill(int id)
         {
             using (var conn = Connection)
@@ -514,6 +555,50 @@ namespace Grizzlies_SpyDuh.Repositories
             }
         }
 
+        /*------------------------ GetFriend -----------------------*/
+        public List<UserFriend> GetUserFriends(string name)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand()) 
+                {
+                    cmd.CommandText = @"
+                                    SELECT Name, Email
+                                    FROM [User] 
+                                    WHERE [User].Id IN (
+                                            SELECT DISTINCT[SpyTeam].UserId2
+                                            FROM [User]   
+                                            INNER JOIN [SpyTeam] 
+                                            ON  [User].Id = [SpyTeam].UserId1
+                                            WHERE [User].Name= @Name )";
+                    
+                    DbUtils.AddParameter(cmd , "Name", name);
+
+                    var reader = cmd.ExecuteReader();
+
+                    var users = new List<UserFriend>();
+
+                    while (reader.Read())
+                    {
+                        var user = new UserFriend()
+                        {
+                            Name = DbUtils.GetString(reader, "Name"), 
+                            Email = DbUtils.GetString(reader, "Email"),
+                        };
+
+                        users.Add(user);
+
+                    }
+
+                    reader.Close();
+
+                    return users;
+
+                }
+            }
+        }
+        
         /*-------------------------------UpdateUser()---1----------------------------------*/
         public void UpdateUser(UserUD UserUD)
         {
@@ -536,6 +621,7 @@ namespace Grizzlies_SpyDuh.Repositories
                 }
             }
         }
+
         /*-------------------------------UpdateUser()---2--------With skill-and-service-----*/
         public void UpdateUser2(UserUpdate UserUpdate)
         {
@@ -573,8 +659,8 @@ namespace Grizzlies_SpyDuh.Repositories
                 }
             }
         }
-        /*-------------------------------deleteUser()--------------------------------------*/
 
+        /*-------------------------------deleteUser()--------------------------------------*/
         public void DeleteUser(int id)
         {
             using (var conn = Connection)
@@ -594,5 +680,7 @@ namespace Grizzlies_SpyDuh.Repositories
                 }
             }
         }
+
     }
 }
+

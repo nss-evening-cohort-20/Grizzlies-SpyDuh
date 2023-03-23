@@ -16,6 +16,14 @@
 
     }
 
+    public class UserBasic
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string Email { get; set; }
+        public bool IsHandler { get; set; }
+    }
+
     public class UserInfo //concise User properties
     {
         public int Id { get; set; }
@@ -25,12 +33,24 @@
         public List<Skill> Skills { get; set; }
     }
 
+    public class SkillCount
+    {
+        public string SkillName { get; set; }
+        public int CountSkill { get; set; }
+    }
 
-    public class UserEnemy //concise User properties
+    public class UserEnemy 
     {
         public string Name { get; set; }
         public string Email { get; set; }
         public int Id { get; internal set; }
+    }
+
+    public class UserFriend
+    {
+        public string Name { get; set; }
+        public string Email { get; set; }
+
     }
 
     public class UserUD //concise User properties
@@ -50,5 +70,6 @@
         public Service Service { get; set; }
     }
 }
+
 
 
