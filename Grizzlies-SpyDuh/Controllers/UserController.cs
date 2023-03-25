@@ -1,7 +1,9 @@
-﻿using Grizzlies_SpyDuh.Models;
+using Grizzlies_SpyDuh.Models;
 using Grizzlies_SpyDuh.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.Json.Serialization;
+using System.Text.Json;
 using System.Collections.Generic;
 
 namespace Grizzlies_SpyDuh.Controllers;
@@ -88,7 +90,6 @@ public class UserController : ControllerBase
     {
         var users = _userRepository.GetNonHandlerByAgencyId(agencyId);
         return Ok(users);
-
     }
 
     [HttpPut("UserService/{id}")]
@@ -129,6 +130,48 @@ public class UserController : ControllerBase
         return NoContent();
     }
 
+    [HttpGet("search")]
+    public IActionResult Search(string q)
+    {
+        return Ok(_userRepository.SearchName(q));
+    }
+
+
+    [HttpPut("UserUpdate1/{id}")]
+    public IActionResult UpdateUser(int id, UserUD UserUD)
+    {
+        if (id != UserUD.Id)
+        {
+            return BadRequest();
+        }
+
+        _userRepository.UpdateUser(UserUD);
+        return NoContent();
+        //return new JsonResult(new JsonSerializerOptions()
+        //{
+        //    DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
+        //});
+    }
+
+    [HttpPut("UserUpdate2/{id}")]
+    public IActionResult UpdateUser2(int id, UserUpdate UserUpdate)
+    {
+        if (id != UserUpdate.Id)
+        {
+            return BadRequest();
+        }
+
+        _userRepository.UpdateUser2(UserUpdate);
+        return NoContent();
+    }
+
+
+    [HttpDelete("User/{id}")]
+    public IActionResult DeleteUser(int id)
+    {
+        _userRepository.DeleteUser(id);
+        return NoContent();
+    }
 
     /*---------------------------------------------*/
 

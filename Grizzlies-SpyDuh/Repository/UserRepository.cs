@@ -5,6 +5,7 @@ using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Hosting;
 using System.Collections.Generic;
 using System.Reflection.PortableExecutable;
+using Microsoft.VisualBasic;
 
 namespace Grizzlies_SpyDuh.Repositories
 {
@@ -400,7 +401,7 @@ namespace Grizzlies_SpyDuh.Repositories
                 }
             }
         }
-        /*-------------------Add()----------------------*/
+        /*------------------------------AddUser()--------------------------------------*/
         public void Add(User user)
         {
             using (var conn = Connection)
@@ -518,7 +519,7 @@ namespace Grizzlies_SpyDuh.Repositories
                                     Id = agencyId,
                                     Name = DbUtils.GetString(reader, "Agency")
                                 },
-                                IsHandler = DbUtils.GetBoolean(reader, "IsHandler"),
+                                IsHandler = DbUtils.GetNullableBoolean(reader, "IsHandler"),
                                 Skills = new List<Skill>(),
                                 Services = new List<Service>()
                             };
@@ -580,6 +581,7 @@ namespace Grizzlies_SpyDuh.Repositories
                 }
             }
         }
+        
         /*-----------------------------------------------*/
         public void DeleteUserService(int id)
         {
@@ -594,7 +596,8 @@ namespace Grizzlies_SpyDuh.Repositories
                 }
             }
         }
-        /*-----------------------------------------------*/
+
+        /*-------------------------------UpdateUserSkill()-------------------------------------*/
         public void UpdateUserSkill(UserSkill userSkill)
         {
             using (var conn = Connection)
@@ -632,10 +635,45 @@ namespace Grizzlies_SpyDuh.Repositories
             }
         }
 
+        public List<UserBasic> SearchName(string criterion)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"SELECT
+                                            u.Id,
+                                            u.Name, 
+                                            u.Email, 
+                                            u.IsHandler
+                                        FROM [User] u
+                                        WHERE u.Name LIKE @Criterion";
+
+                    DbUtils.AddParameter(cmd, "@Criterion", $"%{criterion}%");
+                    var reader = cmd.ExecuteReader();
+
+                    var users = new List<UserBasic>();
+                    while (reader.Read())
+                    {
+                        users.Add(new UserBasic()
+                        {
+                            Id = DbUtils.GetInt(reader, "Id"),
+                            Name = DbUtils.GetString(reader, "Name"),
+                            Email = DbUtils.GetString(reader, "Email"),
+                            IsHandler = DbUtils.GetNullableBoolean(reader, "IsHandler")
+                        });
+                    }
+
+                    reader.Close();
+                    return users;
+                }
+            }
+        }
+
 
 
         /*------------------------ GetFriend -----------------------*/
-
         public List<UserFriend> GetUserFriends(string name)
         {
             using (var conn = Connection)
@@ -675,6 +713,88 @@ namespace Grizzlies_SpyDuh.Repositories
 
                     return users;
 
+                }
+            }
+        }
+        
+        /*-------------------------------UpdateUser()---1----------------------------------*/
+        public void UpdateUser(UserUD UserUD)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                    UPDATE [User] 
+                    SET Name = @Name, 
+                        Email = @Email 
+                    WHERE Id = @Id";
+
+                    DbUtils.AddParameter(cmd, "@Id", UserUD.Id);
+                    DbUtils.AddParameter(cmd, "@Name", UserUD.Name);
+                    DbUtils.AddParameter(cmd, "@Email", UserUD.Email);
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+        /*-------------------------------UpdateUser()---2--------With skill-and-service-----*/
+        public void UpdateUser2(UserUpdate UserUpdate)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"UPDATE [User]
+                                SET Name = @Name,
+                                    Email = @Email
+                                WHERE Id = @UserId;
+
+                                UPDATE UserSkill
+                                SET SkillId = @SkillId,
+                                    SkillLevel = @SkillLevel
+                                WHERE UserId = @UserId;
+
+                                UPDATE UserService
+                                SET ServiceId = @ServiceId,
+                                    ServicePrice = @ServicePrice
+                                WHERE UserId = @UserId";
+
+                    DbUtils.AddParameter(cmd, "@UserId", UserUpdate.Id);
+                    DbUtils.AddParameter(cmd, "@Name", UserUpdate.Name);
+                    DbUtils.AddParameter(cmd, "@Email", UserUpdate.Email);
+                    DbUtils.AddParameter(cmd, "@SkillId", UserUpdate.Skill.Id);
+                    DbUtils.AddParameter(cmd, "@SkillLevel", UserUpdate.Skill.Level);
+                    DbUtils.AddParameter(cmd, "@ServiceId", UserUpdate.Service.Id);
+                    DbUtils.AddParameter(cmd, "@ServicePrice", UserUpdate.Service.Price);
+
+
+                    cmd.ExecuteNonQuery();
+
+                }
+            }
+        }
+
+        /*-------------------------------deleteUser()--------------------------------------*/
+        public void DeleteUser(int id)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                            DELETE FROM UserSkill WHERE UserId =  @Id;
+                            DELETE FROM UserService WHERE UserId =  @Id;
+                            DELETE FROM UserAssignment WHERE UserId =  @Id;
+                            DELETE FROM SpyEnemy WHERE UserId1 =  @Id OR UserId2 =  @Id;
+                            DELETE FROM SpyTeam WHERE UserId1 =  @Id OR UserId2 =  @Id;
+                            DELETE FROM [User] WHERE Id =  @Id;";
+                    DbUtils.AddParameter(cmd, "@id", id);
+                    cmd.ExecuteNonQuery();
                 }
             }
         }

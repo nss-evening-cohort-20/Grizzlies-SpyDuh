@@ -253,6 +253,80 @@ public class AssignmentRepository : BaseRepository, IAssignmentRepository
         }
     }
 
+    public List<Assignment> Search(string criterion, string sortBy, bool sortDescending)
+    {
+        using (var conn = Connection)
+        {
+            conn.Open();
+            using (var cmd = conn.CreateCommand())
+            {
+                cmd.CommandText = @"SELECT
+	                                asgn.Id,
+	                                asgn.Description,
+	                                asgn.AgencyId,
+	                                asgn.Fatal,
+	                                asgn.StartMissionDateTime,
+	                                asgn.EndMissionDateTime,
+	                                a.Name as AgencyName
+                                FROM Assignment asgn
+                                LEFT JOIN Agency a
+	                                ON asgn.AgencyId = a.Id
+                                WHERE asgn.Description LIKE @Criterion";
+
+                if (sortDescending)
+                {
+                    cmd.CommandText += @" ORDER BY (CASE @SortBy
+                                            WHEN 'Id' THEN [asgn].[Id]
+                                            WHEN 'Description' THEN [Description]
+                                            WHEN 'AgencyId' THEN [AgencyId]
+                                            WHEN 'Fatal' THEN [Fatal]
+                                            WHEN 'StartMissionDateTime' THEN [StartMissionDateTime]
+                                            WHEN 'EndMissionDateTime' THEN [EndMissionDateTime]
+                                            WHEN 'AgencyName' THEN [a].[Name]
+                                            END) DESC";
+                }
+                else
+                {
+                    cmd.CommandText += @" ORDER BY CASE @SortBy
+                                            WHEN 'Id' THEN [asgn].[Id]
+                                            WHEN 'Description' THEN [Description]
+                                            WHEN 'AgencyId' THEN [AgencyId]
+                                            WHEN 'Fatal' THEN [Fatal]
+                                            WHEN 'StartMissionDateTime' THEN [StartMissionDateTime]
+                                            WHEN 'EndMissionDateTime' THEN [EndMissionDateTime]
+                                            WHEN 'AgencyName' THEN [a].[Name]
+                                            END";
+                }
+
+                DbUtils.AddParameter(cmd, "@Criterion", $"%{criterion}%");
+                DbUtils.AddParameter(cmd, "@SortBy", sortBy);
+                var reader = cmd.ExecuteReader();
+
+                var assignments = new List<Assignment>();
+                while (reader.Read())
+                {
+                    assignments.Add(new Assignment()
+                    {
+                        Id = DbUtils.GetInt(reader, "Id"),
+                        Description = DbUtils.GetString(reader, "Description"),
+                        Fatal = DbUtils.GetBoolean(reader, "Fatal"),
+                        StartMissionDateTime = DbUtils.GetDateTime(reader, "StartMissionDateTime"),
+                        EndMissionDateTime = DbUtils.IsNotDbNull(reader, "EndMissionDateTime") ? DbUtils.GetDateTime(reader, "EndMissionDateTime") : null,
+                        AgencyId = DbUtils.GetInt(reader, "AgencyId"),
+                        Agency = new Agency()
+                        {
+                            Id = DbUtils.GetInt(reader, "AgencyId"),
+                            Name = DbUtils.GetString(reader, "AgencyName")
+                        }
+                    });
+                }
+
+                reader.Close();
+                return assignments;
+            }
+        }
+    }
+
 
 
     public List<Assignment> GetOngoingAssignmentsByUser(int userId)
