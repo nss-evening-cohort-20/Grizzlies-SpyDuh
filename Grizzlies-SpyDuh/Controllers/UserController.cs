@@ -117,6 +117,12 @@ public class UserController : ControllerBase
         return NoContent();
     }
 
+    [HttpGet("search")]
+    public IActionResult Search(string q)
+    {
+        return Ok(_userRepository.SearchName(q));
+    }
+
 
     [HttpPut("UserUpdate1/{id}")]
     public IActionResult UpdateUser(int id, UserUD UserUD)

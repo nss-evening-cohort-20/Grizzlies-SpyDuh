@@ -68,6 +68,12 @@ namespace Grizzlies_SpyDuh.Controllers
             return BadRequest();
         }
 
+        [HttpGet("search")]
+        public IActionResult Search(string q, string sortBy, bool desc)
+        {
+            return Ok(_assignmentRepository.Search(q, sortBy, desc));
+        }
+
         [HttpPost]
         public IActionResult Post(Assignment assignment)
         {
