@@ -56,7 +56,7 @@ public class UserController : ControllerBase
     public IActionResult GetAllPaginatedUsersWithSkills(int page, int limit) 
     {
         int offset = 0;
-        if (page != 1 && page != 0) { offset = page * limit; };
+        if (page != 1 && page != 0) { offset = (page - 1)  * limit; };
         (var users, int quantity) = _userRepository.GetAllUsersPaginatedWithSkills(offset, limit);
         HttpContext.Response.Headers.Add("X-Total-Count", quantity.ToString());
         return Ok(users);
