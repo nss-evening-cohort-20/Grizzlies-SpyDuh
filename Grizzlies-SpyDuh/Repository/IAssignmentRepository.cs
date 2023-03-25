@@ -12,6 +12,7 @@ namespace Grizzlies_SpyDuh.Repository
         Assignment GetById(int id);
         List<Assignment> GetOngoingAssignmentsByAgency(int userId);
         List<Assignment> GetOngoingAssignmentsByUser(int userId);
+        List<Assignment> Search(string criterion, string sortBy, bool sortDescending);
         void Update(int id, Assignment assignment);
     }
 }

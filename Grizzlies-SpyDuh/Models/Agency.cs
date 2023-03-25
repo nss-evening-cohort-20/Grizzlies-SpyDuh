@@ -9,6 +9,6 @@ namespace Grizzlies_SpyDuh.Models
         [JsonIgnore]
         public List<int>? SkillLevels { get; set; }
         public double? AvgSkillLevel => SkillLevels != null ? double.Parse(((double)SkillLevels?.Sum() / (double)SkillLevels.Count()).ToString("0.00")) : null;
-        public List<UserBasic> Members { get; set; }
+        public List<UserBasic>? Members { get; set; }
     }
 }
