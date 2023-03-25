@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json.Serialization;
 using System.Text.Json;
+using System.Collections.Generic;
 
 namespace Grizzlies_SpyDuh.Controllers;
 
@@ -35,6 +36,8 @@ public class UserController : ControllerBase
 
     /*---------------------------------------------*/
 
+
+
     [HttpGet("GetUserBySkill/{skillName}")]//Taco
     public IActionResult GetUser_BySkill(string skillName)//Taco
     {
@@ -48,6 +51,16 @@ public class UserController : ControllerBase
         return Ok(_userRepository.GetAllUsers());
     }
     /*---------------------------------------------*/
+
+    [HttpGet("AllPaginatedWithSkills")]
+    public IActionResult GetAllPaginatedUsersWithSkills(int page, int limit) 
+    {
+        int offset = 0;
+        if (page != 1 && page != 0) { offset = page * limit; };
+        (var users, int quantity) = _userRepository.GetAllUsersPaginatedWithSkills(offset, limit);
+        HttpContext.Response.Headers.Add("X-Total-Count", quantity.ToString());
+        return Ok(users);
+    }
 
     [HttpGet("GetUserEnemies/{userName}")]//Taco
     public IActionResult Get_Enemies(string userName)//Taco

@@ -7,6 +7,7 @@ public interface IUserRepository
     List<User> GetBySkill_1(string skillName);
     List<UserInfo> GetBySkill_2(string skillName);
     public List<UserInfo> GetAllUsers();
+    (List<UserInfo>, int) GetAllUsersPaginatedWithSkills(int offset, int limit);
     User GetByIdWithSkillsAndServices(int id);
     List<UserEnemy> GetEnemies(string userName);
     public void Add(User user);
