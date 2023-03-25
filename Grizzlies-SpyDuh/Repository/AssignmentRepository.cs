@@ -275,27 +275,25 @@ public class AssignmentRepository : BaseRepository, IAssignmentRepository
 
                 if (sortDescending)
                 {
-                    cmd.CommandText += @" ORDER BY (CASE @SortBy
-                                            WHEN 'Id' THEN [asgn].[Id]
-                                            WHEN 'Description' THEN [Description]
-                                            WHEN 'AgencyId' THEN [AgencyId]
-                                            WHEN 'Fatal' THEN [Fatal]
-                                            WHEN 'StartMissionDateTime' THEN [StartMissionDateTime]
-                                            WHEN 'EndMissionDateTime' THEN [EndMissionDateTime]
-                                            WHEN 'AgencyName' THEN [a].[Name]
-                                            END) DESC";
+                    cmd.CommandText += @" ORDER BY
+		                                    (CASE @SortBy WHEN 'Id' THEN [asgn].[Id] END) DESC,
+		                                    (CASE @SortBy WHEN 'Description' THEN [Description] END) DESC,
+		                                    (CASE @SortBy WHEN 'AgencyId' THEN [AgencyId] END) DESC,
+		                                    (CASE @SortBy WHEN 'Fatal' THEN [Fatal] END) DESC,
+		                                    (CASE @SortBy WHEN 'StartMissionDateTime' THEN [StartMissionDateTime] END) DESC,
+		                                    (CASE @SortBy WHEN 'EndMissionDateTime' THEN [EndMissionDateTime] END) DESC,
+		                                    (CASE @SortBy WHEN 'AgencyName' THEN [a].[Name] END) DESC";
                 }
                 else
                 {
-                    cmd.CommandText += @" ORDER BY CASE @SortBy
-                                            WHEN 'Id' THEN [asgn].[Id]
-                                            WHEN 'Description' THEN [Description]
-                                            WHEN 'AgencyId' THEN [AgencyId]
-                                            WHEN 'Fatal' THEN [Fatal]
-                                            WHEN 'StartMissionDateTime' THEN [StartMissionDateTime]
-                                            WHEN 'EndMissionDateTime' THEN [EndMissionDateTime]
-                                            WHEN 'AgencyName' THEN [a].[Name]
-                                            END";
+                    cmd.CommandText += @" ORDER BY
+		                                    (CASE @SortBy WHEN 'Id' THEN [asgn].[Id] END),
+		                                    (CASE @SortBy WHEN 'Description' THEN [Description] END),
+		                                    (CASE @SortBy WHEN 'AgencyId' THEN [AgencyId] END),
+		                                    (CASE @SortBy WHEN 'Fatal' THEN [Fatal] END),
+		                                    (CASE @SortBy WHEN 'StartMissionDateTime' THEN [StartMissionDateTime] END),
+		                                    (CASE @SortBy WHEN 'EndMissionDateTime' THEN [EndMissionDateTime] END),
+		                                    (CASE @SortBy WHEN 'AgencyName' THEN [a].[Name] END)";
                 }
 
                 DbUtils.AddParameter(cmd, "@Criterion", $"%{criterion}%");
