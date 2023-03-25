@@ -16,7 +16,9 @@ public interface IUserRepository
     public void DeleteUserService(int id);
     public void UpdateUserSkill(UserSkill userSkill);
     public void DeleteUserSkill(int id);
+    public void UpdateUser(UserUD UserUD);
+    public void UpdateUser2(UserUpdate UserUpdate);
+    public void DeleteUser(int id);
     List<UserBasic> SearchName(string criterion);
     public List<UserFriend> GetUserFriends(string name);
-
 }

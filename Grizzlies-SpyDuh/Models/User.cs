@@ -12,7 +12,7 @@
         public List<Service>? Services { get; set; }
         public List<User>? SpyEnemy { get; set; }
         public List<User>? SpyTeam { get; set; }
-       // public Assignment Assignment { get; set; }
+        // public Assignment Assignment { get; set; }
 
     }
 
@@ -29,6 +29,7 @@
         public int Id { get; set; }
         public string Name { get; set; }
         public string Email { get; set; }
+        public Skill Skill { get; set; }
         public List<Skill> Skills { get; set; }
     }
 
@@ -42,7 +43,7 @@
     {
         public string Name { get; set; }
         public string Email { get; set; }
-
+        public int Id { get; internal set; }
     }
 
     public class UserFriend
@@ -52,11 +53,23 @@
 
     }
 
+    public class UserUD //concise User properties
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string Email { get; set; }
 
+    }
 
+    public class UserUpdate //concise User properties
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string Email { get; set; }
+        public Skill Skill { get; set; }
+        public Service Service { get; set; }
+    }
 }
-
-
 
 
 
