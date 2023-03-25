@@ -248,10 +248,11 @@ namespace Grizzlies_SpyDuh.Repositories
                             Email = DbUtils.GetString(reader, "Email"),
                             Skills = new List<Skill>()
                         };
+                        users.Add(existingUser);
 
                         }
                         if (DbUtils.IsNotDbNull(reader, "CountUsers") && quantity == 0) quantity = DbUtils.GetInt(reader, "CountUsers");
-                        if (DbUtils.IsNotDbNull(reader, "UserName"))
+                        if (DbUtils.IsNotDbNull(reader, "SkillName"))
                         {
                             var skillNamex = DbUtils.GetString(reader, "SkillName");
                             existingUser.Skills.Add(new Skill()
@@ -260,7 +261,6 @@ namespace Grizzlies_SpyDuh.Repositories
                                 Name = skillNamex //skillName
                             });
                         };
-                        users.Add(existingUser);
                     }
                     reader.Close();
 
